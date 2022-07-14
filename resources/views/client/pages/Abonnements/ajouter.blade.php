@@ -72,15 +72,30 @@
                     </div>
                     <nav aria-label="breadcrumb">
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="#">Main</a></li>
-                            <li class="breadcrumb-item"><a href="#">Sub</a></li>
-                            <li class="breadcrumb-item active">Active</li>
+                            @foreach ($formules as $item => $value)
+                                <li class="breadcrumb-item">
+                                    <a href="#Avantages{{ $value->id }}">
+                                        {{ $value->Libelle }}
+                                    </a>
+                                </li>
+                            @endforeach
                         </ul>
-                        @foreach ($avantages as $item => $value)
-                            <div id="Avantages{{ $item }}">
-
-                            </div>
-                        @endforeach
+                        @forelse ($avantages as $item => $value)
+                            <input type="hidden" value="{{ $compteur = $avantages[$item]->id }}" name="">
+                            @if ($value->Libelle && $compteur == 0)
+                                <div id="Avantages{{ $value->id }}">
+                                    {{ $avantages->Description }}
+                                </div>
+                            @else
+                                <input type="hidden" value="{{ $compteur = $value->Libelle }}" name="">
+                            @endif
+                        @empty
+                            {{-- SELECT tarifs.Libelle, avantages.Description
+from tarifs, avantages, tarif_avantage
+WHERE tarifs.id = tarif_avantage.tarif_id and tarif_avantage.avantage_id = avantages.id
+and tarifs.Etat = 0 and avantages.Etat = 0 and tarif_avantage.Etat = 0
+GROUP BY tarifs.Libelle, avantages.Description; --}}
+                        @endforelse
                     </nav>
                 </div>
             </div>

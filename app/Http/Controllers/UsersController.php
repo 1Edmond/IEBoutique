@@ -27,8 +27,9 @@ class UsersController extends Controller
             ->where('tarifs.Etat',0)
             ->where('avantages.Etat',0)
             ->where('tarif_avantage.Etat',0)
-            ->select('avantages.Description')
-            ->groupBy('avantages.Description');
+            ->select('avantages.Description','tarifs.id','tarifs.Libelle')
+            ->groupBy('avantages.Description', 'tarifs.Libelle','tarifs.id')
+            ->get();
         return view('client.pages.Abonnements.ajouter', compact('user', 'formules', 'avantages'));
     }
 
