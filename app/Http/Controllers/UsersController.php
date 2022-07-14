@@ -8,6 +8,7 @@ use App\Models\Tarif;
 use App\Models\Utilisateur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Stmt\Foreach_;
 
 class UsersController extends Controller
 {
@@ -22,15 +23,23 @@ class UsersController extends Controller
     {
         $user = Utilisateur::find(session()->get('logged'));
         $formules = Tarif::where('Etat', '0')->get();
-        $avantages = Avantage::join('tarif_avantage', 'tarif_avantage.avantage_id', '=', 'avantages.id')
-            ->join('tarifs', 'tarif_avantage.tarif_id', '=', 'tarifs.id')
-            ->where('tarifs.Etat',0)
-            ->where('avantages.Etat',0)
-            ->where('tarif_avantage.Etat',0)
-            ->select('avantages.Description','tarifs.id','tarifs.Libelle')
-            ->groupBy('avantages.Description', 'tarifs.Libelle','tarifs.id')
-            ->get();
-        return view('client.pages.Abonnements.ajouter', compact('user', 'formules', 'avantages'));
+        $data = array();
+        foreach ($formules as $key => $value) {
+            $data[$value->id] = Avantage::join('tarif_avantage', 'tarif_avantage.avantage_id', '=', 'avantages.id')
+                ->join('tarifs', 'tarif_avantage.tarif_id', '=', 'tarifs.id')
+                ->where('tarifs.Etat', 0)
+                ->where('avantages.Etat', 0)
+                ->where('tarif_avantage.Etat', 0)
+                ->select('avantages.Description')
+                ->where('tarifs.id', $value->id)
+                ->get();
+        }
+        return view('client.pages.Abonnements.ajouter', compact('user', 'formules', 'data'));
+    }
+
+    public function AddAbonnement(Request $request)
+    {
+        return redirect()->route('User.Paiement.Page');
     }
 
     public function Abonnements()
@@ -57,4 +66,14 @@ class UsersController extends Controller
         return view('client.pages.Abonnements.lister', compact('user', 'abonnements'));
     }
     #endregion
+
+    #region Payement
+    public function PaiementPage()
+    {
+        $user = Utilisateur::find(session()->get('logged'));
+        return view('client.pages.Paiements.ajouter',compact('user'));
+    }
+    #endregion
+
+
 }

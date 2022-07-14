@@ -29,15 +29,28 @@ Route::get('/', [PagesController::class, 'Index'])->name('Index');
 */
 #region Abonnement
 Route::get('user/', [UsersController::class, 'Index'])->name('User.Home');
+
 /* 
         Page de la liste des abonnements
 */
 Route::get('user/abonnement/list', [UsersController::class, 'Abonnements'])->name('User.Abonnement.List');
+
 /* 
         Page d'ajout d'abonnement
 */
 Route::get('user/abonnement/add', [UsersController::class, 'AddAbonnementPage'])->name('User.Abonnement.AddPage');
 
+/* 
+        Méthode d'ajout d'abonnement
+*/
+Route::post('user/abonnement/add', [UsersController::class, 'AddAbonnement'])->name('User.Abonnement.Add');
+#endregion
+
+#region Paiement
+/* 
+        Page de payement d'abonnement
+*/
+Route::get('user/paiement', [UsersController::class, 'PaiementPage'])->name('User.Paiement.Page');
 #endregion
 
 #endregion

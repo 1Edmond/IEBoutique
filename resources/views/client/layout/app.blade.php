@@ -9,11 +9,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- favicon
   ============================================ -->
+  @yield('style')
     <link rel="shortcut icon" type="image/x-icon" href="/client/img/favicon.ico">
-    @yield('style')
     <!-- Google Fonts
   ============================================ -->
-    <link href="/client/https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet">
     <!-- Bootstrap CSS
   ============================================ -->
     <link rel="stylesheet" href="/client/css/bootstrap.min.css">
@@ -73,6 +73,7 @@
     <!-- Main Menu area start-->
     @include('client.shared.navbar')
     <!-- Main Menu area End-->
+    @include('client.shared.pageInfo')
     <!-- Start Status area -->
     @yield('content')
     <!-- End Realtime sts area-->

@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                 <div class="logo-area">
-                    <a href="#"><img src="client/img/logo/logo.png" alt="" /></a>
+                    <a href="#"><img src="/client/img/logo/logo.png" alt="" /></a>
                 </div>
             </div>
             <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
@@ -28,7 +28,7 @@
                                     <a href="#">
                                         <div class="hd-message-sn">
                                             <div class="hd-message-img">
-                                                <img src="client/img/post/1.jpg" alt="" />
+                                                <img src="/client/img/post/1.jpg" alt="" />
                                             </div>
                                             <div class="hd-mg-ctn">
                                                 <h3>David Belle</h3>
@@ -39,7 +39,7 @@
                                     <a href="#">
                                         <div class="hd-message-sn">
                                             <div class="hd-message-img">
-                                                <img src="client/img/post/2.jpg" alt="" />
+                                                <img src="/client/img/post/2.jpg" alt="" />
                                             </div>
                                             <div class="hd-mg-ctn">
                                                 <h3>Jonathan Morris</h3>
@@ -50,7 +50,7 @@
                                     <a href="#">
                                         <div class="hd-message-sn">
                                             <div class="hd-message-img">
-                                                <img src="client/img/post/4.jpg" alt="" />
+                                                <img src="/client/img/post/4.jpg" alt="" />
                                             </div>
                                             <div class="hd-mg-ctn">
                                                 <h3>Fredric Mitchell</h3>
@@ -61,7 +61,7 @@
                                     <a href="#">
                                         <div class="hd-message-sn">
                                             <div class="hd-message-img">
-                                                <img src="client/img/post/1.jpg" alt="" />
+                                                <img src="/client/img/post/1.jpg" alt="" />
                                             </div>
                                             <div class="hd-mg-ctn">
                                                 <h3>David Belle</h3>
@@ -72,7 +72,7 @@
                                     <a href="#">
                                         <div class="hd-message-sn">
                                             <div class="hd-message-img">
-                                                <img src="client/img/post/2.jpg" alt="" />
+                                                <img src="/client/img/post/2.jpg" alt="" />
                                             </div>
                                             <div class="hd-mg-ctn">
                                                 <h3>Glenn Jecobs</h3>
@@ -95,7 +95,7 @@
                                     <a href="#">
                                         <div class="hd-message-sn">
                                             <div class="hd-message-img">
-                                                <img src="client/img/post/1.jpg" alt="" />
+                                                <img src="/client/img/post/1.jpg" alt="" />
                                             </div>
                                             <div class="hd-mg-ctn">
                                                 <h3>David Belle</h3>
@@ -106,7 +106,7 @@
                                     <a href="#">
                                         <div class="hd-message-sn">
                                             <div class="hd-message-img">
-                                                <img src="client/img/post/2.jpg" alt="" />
+                                                <img src="/client/img/post/2.jpg" alt="" />
                                             </div>
                                             <div class="hd-mg-ctn">
                                                 <h3>Jonathan Morris</h3>
@@ -117,7 +117,7 @@
                                     <a href="#">
                                         <div class="hd-message-sn">
                                             <div class="hd-message-img">
-                                                <img src="client/img/post/4.jpg" alt="" />
+                                                <img src="/client/img/post/4.jpg" alt="" />
                                             </div>
                                             <div class="hd-mg-ctn">
                                                 <h3>Fredric Mitchell</h3>
@@ -128,7 +128,7 @@
                                     <a href="#">
                                         <div class="hd-message-sn">
                                             <div class="hd-message-img">
-                                                <img src="client/img/post/1.jpg" alt="" />
+                                                <img src="/client/img/post/1.jpg" alt="" />
                                             </div>
                                             <div class="hd-mg-ctn">
                                                 <h3>David Belle</h3>
@@ -139,7 +139,7 @@
                                     <a href="#">
                                         <div class="hd-message-sn">
                                             <div class="hd-message-img">
-                                                <img src="client/img/post/2.jpg" alt="" />
+                                                <img src="/client/img/post/2.jpg" alt="" />
                                             </div>
                                             <div class="hd-mg-ctn">
                                                 <h3>Glenn Jecobs</h3>
@@ -211,7 +211,7 @@
                                     <a href="#">
                                         <div class="hd-message-sn">
                                             <div class="hd-message-img chat-img">
-                                                <img src="client/img/post/1.jpg" alt="" />
+                                                <img src="/client/img/post/1.jpg" alt="" />
                                                 <div class="chat-avaible"><i class="notika-icon notika-dot"></i></div>
                                             </div>
                                             <div class="hd-mg-ctn">
@@ -223,7 +223,7 @@
                                     <a href="#">
                                         <div class="hd-message-sn">
                                             <div class="hd-message-img chat-img">
-                                                <img src="client/img/post/2.jpg" alt="" />
+                                                <img src="/client/img/post/2.jpg" alt="" />
                                             </div>
                                             <div class="hd-mg-ctn">
                                                 <h3>Jonathan Morris</h3>
@@ -234,7 +234,7 @@
                                     <a href="#">
                                         <div class="hd-message-sn">
                                             <div class="hd-message-img chat-img">
-                                                <img src="client/img/post/4.jpg" alt="" />
+                                                <img src="/client/img/post/4.jpg" alt="" />
                                             </div>
                                             <div class="hd-mg-ctn">
                                                 <h3>Fredric Mitchell</h3>
@@ -245,7 +245,7 @@
                                     <a href="#">
                                         <div class="hd-message-sn">
                                             <div class="hd-message-img chat-img">
-                                                <img src="client/img/post/1.jpg" alt="" />
+                                                <img src="/client/img/post/1.jpg" alt="" />
                                                 <div class="chat-avaible"><i class="notika-icon notika-dot"></i></div>
                                             </div>
                                             <div class="hd-mg-ctn">
@@ -257,7 +257,7 @@
                                     <a href="#">
                                         <div class="hd-message-sn">
                                             <div class="hd-message-img chat-img">
-                                                <img src="client/img/post/2.jpg" alt="" />
+                                                <img src="/client/img/post/2.jpg" alt="" />
                                                 <div class="chat-avaible"><i class="notika-icon notika-dot"></i></div>
                                             </div>
                                             <div class="hd-mg-ctn">
