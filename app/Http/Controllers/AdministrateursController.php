@@ -120,7 +120,7 @@ class AdministrateursController extends Controller
                 ->orderby('DateAbonnement', 'desc')
                 ->paginate(5);
 
-            return view('admin.pages.Abonnements.lister', compact('admin', 'abonnements'))->with('Info',"Recherche sur l'abonnement ayant pour date : ".$date." et pour formule ".$formule);
+            return view('admin.pages.Abonnements.lister', compact('admin', 'abonnements'))->with('Info', "Recherche sur l'abonnement ayant pour date : " . $date . " et pour formule " . $formule);
         } else
         if (isset($request['Formule']))
             $formule = $request->input('Formule');
@@ -136,7 +136,7 @@ class AdministrateursController extends Controller
             ->orderby('DateAbonnement', 'desc')
             ->paginate(5);
 
-        return view('admin.pages.Abonnements.lister', compact('admin', 'abonnements'))->with('Info',"Recherche sur l'abonnement ayant pour formule ".$formule);
+        return view('admin.pages.Abonnements.lister', compact('admin', 'abonnements'))->with('Info', "Recherche sur l'abonnement ayant pour formule " . $formule);
     }
 
     #endregion

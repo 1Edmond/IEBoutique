@@ -5,104 +5,71 @@
                 <div class="mobile-menu">
                     <nav id="dropdown">
                         <ul class="mobile-menu-nav">
-                            <li><a data-toggle="collapse" data-target="#Abonnement" href="#">Abonnement</a>
+                            <li><a data-toggle="collapse" data-target="#NavAbonnement" href="#">Abonnement</a>
                                 <ul class="collapse dropdown-header-top">
                                     <li><a href="">Voir mes abonnements</a></li>
                                     <li><a href="">Faire un abonnement</a></li>
                                 </ul>
                             </li>
-                            <li><a data-toggle="collapse" data-target="#Approvisonnement"
+                            <li><a data-toggle="collapse" data-target="#NavApprovisonnement"
                                     href="#">Approvisonnement</a>
-                                <ul id="Approvisonnement" class="collapse dropdown-header-top">
+                                <ul id="NavApprovisonnement" class="collapse dropdown-header-top">
                                     <li><a href="">Lister les approvisonnements</a></li>
                                     <li><a href="">Faire une demande d'approvisonnement</a></li>
                                 </ul>
                             </li>
-                            <li><a data-toggle="collapse" data-target="#Article" href="#">Article</a>
-                                <ul id="Article" class="collapse dropdown-header-top">
-                                    <li><a href="animations.html">Animations</a></li>
-                                    <li><a href="google-map.html">Google Map</a></li>
-                                    <li><a href="data-map.html">Data Maps</a></li>
-                                    <li><a href="code-editor.html">Code Editor</a></li>
-                                    <li><a href="image-cropper.html">Images Cropper</a></li>
-                                    <li><a href="wizard.html">Wizard</a></li>
+                            <li><a data-toggle="collapse" data-target="#NavArticles" href="#">Article</a>
+                                <ul id="NavArticles" class="collapse dropdown-header-top">
+                                    <li><a href="">Lister les articles</a></li>
+                                    <li><a href="">Ajouter un article</a></li>
+                                    <li><a href="">Modifier un article</a></li>
+                                    <li><a href="">Suprimer un article</a></li>
                                 </ul>
                             </li>
-                            <li><a data-toggle="collapse" data-target="#Categorie" href="#">Categorie</a>
-                                <ul id="Categorie" class="collapse dropdown-header-top">
-                                    <li><a href="flot-charts.html">Flot Charts</a></li>
-                                    <li><a href="bar-charts.html">Bar Charts</a></li>
-                                    <li><a href="line-charts.html">Line Charts</a></li>
-                                    <li><a href="area-charts.html">Area Charts</a></li>
+                            <li><a data-toggle="collapse" data-target="#NavCategories" href="#">Categorie</a>
+                                <ul id="NavCategories" class="collapse dropdown-header-top">
+                                    <li><a href="">Lister les catégories</a></li>
+                                    <li><a href="">Ajouter une catégorie</a></li>
                                 </ul>
                             </li>
-                            <li><a data-toggle="collapse" data-target="#Commande" href="#">Commande</a>
-                                <ul id="Commande" class="collapse dropdown-header-top">
-                                    <li><a href="normal-table.html">Normal Table</a></li>
-                                    <li><a href="data-table.html">Data Table</a></li>
+                            <li><a data-toggle="collapse" data-target="#NavCommandes" href="#">Commande</a>
+                                <ul id="NavCommandes" class="collapse dropdown-header-top">
+                                    <li><a href="">Voir toutes les commandes</a></li>
+                                    <li><a href="">Faire une demande</a></li>
+                                    <li><a href="">Modifier une demande</a></li>
+                                    <li><a href="">Annuler une demande</a></li>
                                 </ul>
                             </li>
-                            <li><a data-toggle="collapse" data-target="#Entrepots" href="#">Entrepots</a>
-                                <ul id="Entrepots" class="collapse dropdown-header-top">
-                                    <li><a href="form-elements.html">Form Elements</a></li>
-                                    <li><a href="form-components.html">Form Components</a></li>
-                                    <li><a href="form-examples.html">Form Examples</a></li>
+                            <li><a data-toggle="collapse" data-target="#NavEntrepots" href="#">Entrepots</a>
+                                <ul id="NavEntrepots" class="collapse dropdown-header-top">
+                                    <li><a href="">Voir tous les entrepôts</a></li>
+                                    <li><a href="">Ajouter un entrepôt</a></li>
+                                    <li><a href="">Modifier un entrepôt</a></li>
+                                    <li><a href="">Supprimer un entrepôt</a></li>
                                 </ul>
                             </li>
-                            <li><a data-toggle="collapse" data-target="#Fournisseurs" href="#">Fournisseurs</a>
-                                <ul id="Fournisseurs" class="collapse dropdown-header-top">
-                                    <li><a href="notification.html">Notifications</a>
-                                    </li>
-                                    <li><a href="alert.html">Alerts</a>
-                                    </li>
-                                    <li><a href="modals.html">Modals</a>
-                                    </li>
-                                    <li><a href="buttons.html">Buttons</a>
-                                    </li>
-                                    <li><a href="tabs.html">Tabs</a>
-                                    </li>
-                                    <li><a href="accordion.html">Accordion</a>
-                                    </li>
-                                    <li><a href="dialog.html">Dialogs</a>
-                                    </li>
-                                    <li><a href="popovers.html">Popovers</a>
-                                    </li>
-                                    <li><a href="tooltips.html">Tooltips</a>
-                                    </li>
-                                    <li><a href="dropdown.html">Dropdowns</a>
-                                    </li>
+                            <li><a data-toggle="collapse" data-target="#NavFournisseurs" href="#">Fournisseurs</a>
+                                <ul id="NavFournisseurs" class="collapse dropdown-header-top">
+                                    <li><a href="">Lister vos fournisseurs</a></li>
+                                    <li><a href="">Ajouter un nouveau fournisseur</a></li>
+                                    <li><a href="">Modifier un fournisseur</a></li>
+                                    <li><a href="">Supprimer un fournisseur</a></li>
                                 </ul>
                             </li>
-                            <li><a data-toggle="collapse" data-target="#Models" href="#">Models</a>
-                                <ul id="Models" class="collapse dropdown-header-top">
-                                    <li><a href="contact.html">Contact</a>
-                                    </li>
-                                    <li><a href="invoice.html">Invoice</a>
-                                    </li>
-                                    <li><a href="typography.html">Typography</a>
-                                    </li>
-                                    <li><a href="color.html">Color</a>
-                                    </li>
-                                    <li><a href="login-register.html">Login Register</a>
-                                    </li>
-                                    <li><a href="404.html">404 Page</a>
-                                    </li>
+                            <li><a data-toggle="collapse" data-target="#NavModels" href="#">Models</a>
+                                <ul id="NavModels" class="collapse dropdown-header-top">
+                                    <li><a href="">Voir les modèles disponible</a></li>
+                                    <li><a href="">Ajouter un modèle</a></li>
+                                    <li><a href="">Modifier un modèle</a></li>
+                                    <li><a href="">Supprimer un modèle</a></li>
                                 </ul>
                             </li>
-                            <li><a data-toggle="collapse" data-target="#Ventes" href="#">Ventes</a>
-                                <ul id="Ventes" class="collapse dropdown-header-top">
-                                    <li><a href="contact.html">Contact</a>
-                                    </li>
-                                    <li><a href="invoice.html">Invoice</a>
-                                    </li>
-                                    <li><a href="typography.html">Typography</a>
-                                    </li>
-                                    <li><a href="color.html">Color</a>
-                                    </li>
-                                    <li><a href="login-register.html">Login Register</a>
-                                    </li>
-                                    <li><a href="404.html">404 Page</a>
-                                    </li>
+                            <li><a data-toggle="collapse" data-target="#NavVentes" href="#">Ventes</a>
+                                <ul id="NavVentes" class="collapse dropdown-header-top">
+                                    <li><a href="">Voir toutes les ventes</a></li>
+                                    <li><a href="">Faire une vente</a></li>
+                                    <li><a href="">Modifier une vente</a></li>
+                                    <li><a href="">Supprimer une vente</a></li>
                                 </ul>
                             </li>
                         </ul>

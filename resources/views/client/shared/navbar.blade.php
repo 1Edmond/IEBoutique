@@ -3,38 +3,42 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
-                    <li class="active"><a data-toggle="tab" href="#Abonnement"><i class="notika-icon notika-house"></i>
+                    <li class="active"><a data-toggle="tab" href="#NavAbonnement"><i class="notika-icon notika-house"></i>
                             Abonnement</a>
                     </li>
-                    <li><a data-toggle="tab" href="#Approvisionnement"><i class="notika-icon notika-mail"></i> Approvisonnement</a>
+                    <li><a data-toggle="tab" href="#NavApprovisionnement"><i class="notika-icon notika-mail"></i>
+                            Approvisonnement</a>
                     </li>
-                    <li><a data-toggle="tab" href="#Article"><i class="notika-icon notika-edit"></i> Article</a>
+                    <li><a data-toggle="tab" href="#NavArticles"><i class="notika-icon notika-edit"></i> Article</a>
                     </li>
-                    <li><a data-toggle="tab" href="#Categorie"><i class="notika-icon notika-bar-chart"></i>
+                    <li><a data-toggle="tab" href="#NavCategories"><i class="notika-icon notika-bar-chart"></i>
                             Categorie</a>
                     </li>
-                    <li><a data-toggle="tab" href="#Commande"><i class="notika-icon notika-windows"></i> Commande</a>
+                    <li><a data-toggle="tab" href="#NavCommandes"><i class="notika-icon notika-windows"></i>
+                            Commande</a>
                     </li>
-                    <li><a data-toggle="tab" href="#Entrepots"><i class="notika-icon notika-form"></i> Entrepots</a>
+                    <li><a data-toggle="tab" href="#NavEntrepots"><i class="notika-icon notika-form"></i> Entrepôts</a>
                     </li>
-                    <li><a data-toggle="tab" href="#Fournisseurs"><i class="notika-icon notika-app"></i>
+                    <li><a data-toggle="tab" href="#NavFournisseurs"><i class="notika-icon notika-app"></i>
                             Fournisseurs</a>
                     </li>
-                    <li><a data-toggle="tab" href="#Models"><i class="notika-icon notika-support"></i> Models</a>
+                    <li><a data-toggle="tab" href="#NavModels"><i class="notika-icon notika-support"></i> Models</a>
                     </li>
-                    <li><a data-toggle="tab" href="#Ventes"><i class="notika-icon notika-support"></i> Ventes</a>
+                    <li><a data-toggle="tab" href="#NavVentes"><i class="notika-icon notika-support"></i> Ventes</a>
                     </li>
                 </ul>
                 <div class="tab-content custom-menu-content">
-                    <div id="Abonnement" class="tab-pane in active notika-tab-menu-bg animated flipInX">
+                    <div id="NavAbonnement" class="tab-pane in active notika-tab-menu-bg animated flipInX">
                         <ul class="notika-main-menu-dropdown">
-                            <li><a href="">Voir mes abonnements</a>
+                            <li><a href="{{route('User.Abonnement.List')}}">Voir mes abonnements</a>
                             </li>
-                            <li><a href="">Faire un abonnement</a>
+                            @if ($user->Role == "Gérant")
+                            <li><a href="{{route('User.Abonnement.AddPage')}}">Faire un abonnement</a>
                             </li>
+                            @endif
                         </ul>
                     </div>
-                    <div id="Approvisionnement" class="tab-pane notika-tab-menu-bg animated flipInX">
+                    <div id="NavApprovisionnement" class="tab-pane notika-tab-menu-bg animated flipInX">
                         <ul class="notika-main-menu-dropdown">
                             <li><a href="">Lister les approvisonnements</a>
                             </li>
@@ -42,106 +46,58 @@
                             </li>
                         </ul>
                     </div>
-                    <div id="Article" class="tab-pane notika-tab-menu-bg animated flipInX">
+                    <div id="NavArticles" class="tab-pane notika-tab-menu-bg animated flipInX">
                         <ul class="notika-main-menu-dropdown">
-                            <li><a href="animations.html">Animations</a>
-                            </li>
-                            <li><a href="google-map.html">Google Map</a>
-                            </li>
-                            <li><a href="data-map.html">Data Maps</a>
-                            </li>
-                            <li><a href="code-editor.html">Code Editor</a>
-                            </li>
-                            <li><a href="image-cropper.html">Images Cropper</a>
-                            </li>
-                            <li><a href="wizard.html">Wizard</a>
-                            </li>
+                            <li><a href="">Lister les articles</a></li>
+                            <li><a href="">Ajouter un article</a></li>
+                            <li><a href="">Modifier un article</a></li>
+                            <li><a href="">Suprimer un article</a></li>
                         </ul>
                     </div>
-                    <div id="Categorie" class="tab-pane notika-tab-menu-bg animated flipInX">
+                    <div id="NavCategories" class="tab-pane notika-tab-menu-bg animated flipInX">
                         <ul class="notika-main-menu-dropdown">
-                            <li><a href="flot-Categorie.html">Flot Categorie</a>
-                            </li>
-                            <li><a href="bar-Categorie.html">Bar Categorie</a>
-                            </li>
-                            <li><a href="line-Categorie.html">Line Categorie</a>
-                            </li>
-                            <li><a href="area-Categorie.html">Area Categorie</a>
-                            </li>
+                            <li><a href="">Lister les catégories</a></li>
+                            <li><a href="">Ajouter une catégorie</a></li>
                         </ul>
                     </div>
-                    <div id="Commande" class="tab-pane notika-tab-menu-bg animated flipInX">
+                    <div id="NavCommandes" class="tab-pane notika-tab-menu-bg animated flipInX">
                         <ul class="notika-main-menu-dropdown">
-                            <li><a href="normal-table.html">Normal Table</a>
-                            </li>
-                            <li><a href="data-table.html">Data Table</a>
-                            </li>
+                            <li><a href="">Voir toutes les commandes</a></li>
+                            <li><a href="">Faire une demande</a></li>
+                            <li><a href="">Modifier une demande</a></li>
+                            <li><a href="">Annuler une demande</a></li>
                         </ul>
                     </div>
-                    <div id="Entrepots" class="tab-pane notika-tab-menu-bg animated flipInX">
+                    <div id="NavEntrepots" class="tab-pane notika-tab-menu-bg animated flipInX">
                         <ul class="notika-main-menu-dropdown">
-                            <li><a href="form-elements.html">Form Elements</a>
-                            </li>
-                            <li><a href="form-components.html">Form Components</a>
-                            </li>
-                            <li><a href="form-examples.html">Form Examples</a>
-                            </li>
+                            <li><a href="">Voir tous les entrepôts</a></li>
+                            <li><a href="">Ajouter un entrepôt</a></li>
+                            <li><a href="">Modifier un entrepôt</a></li>
+                            <li><a href="">Supprimer un entrepôt</a></li>
                         </ul>
                     </div>
-                    <div id="Fournisseurs" class="tab-pane notika-tab-menu-bg animated flipInX">
+                    <div id="NavFournisseurs" class="tab-pane notika-tab-menu-bg animated flipInX">
                         <ul class="notika-main-menu-dropdown">
-                            <li><a href="notification.html">Notifications</a>
-                            </li>
-                            <li><a href="alert.html">Alerts</a>
-                            </li>
-                            <li><a href="modals.html">Modals</a>
-                            </li>
-                            <li><a href="buttons.html">Buttons</a>
-                            </li>
-                            <li><a href="tabs.html">Tabs</a>
-                            </li>
-                            <li><a href="accordion.html">Accordion</a>
-                            </li>
-                            <li><a href="dialog.html">Dialogs</a>
-                            </li>
-                            <li><a href="popovers.html">Popovers</a>
-                            </li>
-                            <li><a href="tooltips.html">Tooltips</a>
-                            </li>
-                            <li><a href="dropdown.html">Dropdowns</a>
-                            </li>
+                            <li><a href="">Lister vos fournisseurs</a></li>
+                            <li><a href="">Ajouter un nouveau fournisseur</a></li>
+                            <li><a href="">Modifier un fournisseur</a></li>
+                            <li><a href="">Supprimer un fournisseur</a></li>
                         </ul>
                     </div>
-                    <div id="Models" class="tab-pane notika-tab-menu-bg animated flipInX">
+                    <div id="NavModels" class="tab-pane notika-tab-menu-bg animated flipInX">
                         <ul class="notika-main-menu-dropdown">
-                            <li><a href="contact.html">Contact</a>
-                            </li>
-                            <li><a href="invoice.html">Invoice</a>
-                            </li>
-                            <li><a href="typography.html">Typography</a>
-                            </li>
-                            <li><a href="color.html">Color</a>
-                            </li>
-                            <li><a href="login-register.html">Login Register</a>
-                            </li>
-                            <li><a href="404.html">404 Models</a>
-                            </li>
+                            <li><a href="">Voir les modèles disponible</a></li>
+                            <li><a href="">Ajouter un modèle</a></li>
+                            <li><a href="">Modifier un modèle</a></li>
+                            <li><a href="">Supprimer un modèle</a></li>
                         </ul>
                     </div>
-                    <div id="Ventes" class="tab-pane notika-tab-menu-bg animated flipInX">
+                    <div id="NavVentes" class="tab-pane notika-tab-menu-bg animated flipInX">
                         <ul class="notika-main-menu-dropdown">
-                            <li><a href="contact.html">Contact</a>
-                            </li>
-                            <li><a href="invoice.html">Invoice</a>
-                            </li>
-                            <li><a href="typography.html">Typography</a>
-                            </li>
-                            <li><a href="color.html">Color</a>
-                            </li>
-                            <li><a href="login-register.html">Login Register</a>
-                            </li>
-                            <li><a href="404.html">404 Models</a>
-                            </li>
+                            <li><a href="">Voir toutes les ventes</a></li>
+                            <li><a href="">Faire une vente</a></li>
+                            <li><a href="">Modifier une vente</a></li>
+                            <li><a href="">Supprimer une vente</a></li>
                         </ul>
                     </div>
                 </div>
