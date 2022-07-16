@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Abonnement;
 use App\Models\Avantage;
+use App\Models\Categorie;
+use App\Models\Entrepot;
 use App\Models\Tarif;
 use App\Models\Utilisateur;
 use Illuminate\Http\Request;
@@ -71,9 +73,84 @@ class UsersController extends Controller
     public function PaiementPage()
     {
         $user = Utilisateur::find(session()->get('logged'));
-        return view('client.pages.Paiements.ajouter',compact('user'));
+        return view('client.pages.Paiements.ajouter', compact('user'));
     }
     #endregion
 
+    #region Categorie
+
+    public function Categories()
+    {
+        $user = Utilisateur::find(session()->get('logged'));
+        $categories = Categorie::where('Etat', 0)->get();
+        return view('client.pages.Categories.lister', compact('user', 'categories'));
+    }
+
+    public function AddCategoriePage()
+    {
+        $user = Utilisateur::find(session()->get('logged'));
+        return view('client.pages.Categories.ajouter', compact('user'));
+    }
+
+    public function AddCategorie(Request $request)
+    {
+        $user = Utilisateur::find(session()->get('logged'));
+        $this->validate($request, [
+            'Libelle' => ['unique:categories', 'required'],
+            'Description' => ['required'],
+        ]);
+
+        Categorie::create([
+            'Libelle' => $request->input('Libelle'),
+            'Description' => $request->input('Description'),
+            'DateAjout' => now(),
+            'UserId' => $user->id,
+        ]);
+        return redirect()->route('User.Categorie.AddPage')
+            ->with('success', 'Ajout réussi de la catégorie ' . $request->input('Libelle') . ' réussie');
+    }
+
+    #endregion
+
+    #region Entrepôt
+
+    public function Entrepots()
+    {
+        $user = Utilisateur::find(session()->get('logged'));
+        $entrepots = Entrepot::where('Etat', 0)->where('BoutiqueId', $user->BoutiqueId)->get();
+        return view('client.pages.Entrepots.lister', compact('user', 'entrepots'));
+    }
+
+    public function AddEntrepotPage()
+    {
+        $user = Utilisateur::find(session()->get('logged'));
+        $entrepots = Entrepot::where('Etat', 0)->get();
+        return view('client.pages.Entrepots.ajouter', compact('user', 'entrepots'));
+    }
+
+    public function AddEntrepot(Request $request)
+    {
+        $user = Utilisateur::find(session()->get('logged'));
+        $entrepots = Entrepot::where('Etat', 0)->get();
+        return view('client.pages.Entrepots.lister', compact('user', 'entrepots'));
+    }
+
+    public function EntrepotUpdate(Request $request)
+    {
+        $user = Utilisateur::find(session()->get('logged'));
+        $entrepots = Entrepot::where('Etat', 0)->get();
+        return view('client.pages.Entrepots.lister', compact('user', 'entrepots'));
+    }
+
+    public function EntrepotDelete($id)
+    {
+        $user = Utilisateur::find(session()->get('logged'));
+        $entrepot = Entrepot::find($id);
+        $entrepot->Etat = 1;
+        $entrepot->update();
+        return redirect()->route('User.Entrepot.List')->with('Success', 'Suppression de ' . $entrepot->Description . ' réussie.');
+    }
+
+    #endregion
 
 }

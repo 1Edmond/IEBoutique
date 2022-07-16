@@ -27,8 +27,9 @@ Route::get('/', [PagesController::class, 'Index'])->name('Index');
 /* 
         Page d'accueil de l'utilisateur
 */
-#region Abonnement
 Route::get('user/', [UsersController::class, 'Index'])->name('User.Home');
+
+#region Abonnement
 
 /* 
         Page de la liste des abonnements
@@ -44,6 +45,54 @@ Route::get('user/abonnement/add', [UsersController::class, 'AddAbonnementPage'])
         Méthode d'ajout d'abonnement
 */
 Route::post('user/abonnement/add', [UsersController::class, 'AddAbonnement'])->name('User.Abonnement.Add');
+#endregion
+
+#region Catégorie
+
+/*
+    Page de la liste des catégories disponibles
+*/
+Route::get('user/categorie/list', [UsersController::class, 'Categories'])->name('User.Categorie.List');
+
+/*
+    Page d'ajout de catégorie
+*/
+Route::get('user/categorie/add', [UsersController::class, 'AddCategoriePage'])->name('User.Categorie.AddPage');
+
+/*
+ Méthode d'ajout de catégorie
+*/
+Route::post('user/categorie/add', [UsersController::class, 'AddCategorie'])->name('User.Categorie.Add');
+
+#endregion
+
+#region Entrepôt
+
+/*
+    Page de la liste des entrepôts disponibles
+*/
+Route::get('user/entrepot/list', [UsersController::class, 'Entrepots'])->name('User.Entrepot.List');
+
+/*
+    Page d'ajout d'un entrepôt
+*/
+Route::get('user/entrepot/add', [UsersController::class, 'AddEntrepotPage'])->name('User.Entrepot.AddPage');
+
+/*
+    Méthode d'ajout d'un entrepôt
+*/
+Route::post('user/entrepot/add', [UsersController::class, 'AddEntrepot'])->name('User.Entrepot.Add');
+
+/*
+    Méthode de modification d'un entrepôt
+*/
+Route::post('user/entrepot/update/{id}', [UsersController::class, 'EntrepotUpdate'])->name('User.Entrepot.Update');
+
+/*
+    Méthode de suppression d'un entrepôt
+*/
+Route::get('user/entrepot/delete/{id}', [UsersController::class, 'EntrepotDelete'])->name('User.Entrepot.Delete')->whereNumber('id');
+
 #endregion
 
 #region Paiement
