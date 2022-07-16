@@ -10,15 +10,6 @@
 
 @section('InfoLabel')
     Page des entrepôts disponibles
-    <div class="notification-demo">
-        <div id="NotifMessageHeader"> Entête du message </div>
-        <div id="NotifMessageContent"> Le message </div>
-    </div>
-    <button id="TestALertBtn">
-        sss
-    </button>
-    <a href="" class="btn btn-info" message="Test" data-type="inverse" data-from="bottom" data-align="center">Bottom
-        Center</a>
 @endsection
 
 
@@ -248,14 +239,14 @@
                                                     <p>
                                                         @csrf
                                                     <div class="mb-3 col-lg-6">
-                                                        <label for="Description{{ $item->Adresse }}"
+                                                        <label for="Description{{ $item->id }}"
                                                             class="form-label">Description</label>
                                                         <input type="text" class="form-control" name="Description"
-                                                            id="Description{{ $item->Adresse }}"
-                                                            aria-describedby="helpDescription{{ $item->Adresse }}"
+                                                            id="Description{{ $item->id }}"
+                                                            aria-describedby="helpDescription{{ $item->id }}"
                                                             value="{{ $item->Description }}"
                                                             placeholder="Saisissez la description de l'entrepôt">
-                                                        <small id="helpDescription{{ $item->Adresse }}"
+                                                        <small id="helpDescription{{ $item->id }}"
                                                             class="form-text text-muted">Description Help
                                                             text</small>
                                                         @error('Description')
@@ -264,12 +255,18 @@
                                                             </div>
                                                         @enderror
                                                     </div>
+                                                    <div class="mb-3 col-lg-6" hidden>
+                                                        <input type="hidden" class="form-control" name="Id"
+                                                            id="Id{{ $item->id }}"
+                                                            aria-describedby="helpId{{ $item->Id }}"
+                                                            value="{{ $item->id }}">
+                                                    </div>
                                                     <div class="mb-3 col-lg-6">
-                                                        <label for="Addresse{{ $item->Adresse }}"
+                                                        <label for="Addresse{{ $item->id }}"
                                                             class="form-label">Addresse</label>
                                                         <input type="text" class="form-control" name="Adresse"
-                                                            id="Addresse{{ $item->Adresse }}"
-                                                            value="{{ $item->Adresse }}"
+                                                            id="Addresse{{ $item->id }}"
+                                                            value="{{ $item->Adresse }}" max="150"
                                                             aria-describedby="helpAddresse{{ $item->id }}"
                                                             placeholder="Saisissez l'addresse de l'entrepôt">
                                                         <small id="helpAddresse{{ $item->id }}"
@@ -322,10 +319,21 @@
         });
     </script>
     @if (Session::get('Success'))
+        @foreach (Session::get('Success') as $item => $value)
+            <script>
+                //notify4("bottom", "center", nIcons, "inverse", nAnimIn, nAnimOut);
+                $.growl('{{ $value }}', {
+                    type: 'success',
+                    delay: 2000 + {{$item}},
+                });
+            </script>
+        @endforeach
+    @endif
+    @if (Session::get('Fail'))
         <script>
             //notify4("bottom", "center", nIcons, "inverse", nAnimIn, nAnimOut);
-            $.growl("{{ Session::get('Success') }}", {
-                type: 'success',
+            $.growl("{{ Session::get('Fail') }}", {
+                type: 'danger',
                 delay: 5000,
             });
         </script>
@@ -334,8 +342,7 @@
         @foreach ($errors->all() as $error)
             <script>
                 //notify4("bottom", "center", nIcons, "inverse", nAnimIn, nAnimOut);
-
-                $.growl("{{ $error }}", {
+                $.growl("Erreur, liser le message d'erreur pour résoudre le problème", {
                     type: 'info',
                     delay: 5000,
                 });

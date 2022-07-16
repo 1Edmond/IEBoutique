@@ -138,8 +138,25 @@ class UsersController extends Controller
     public function EntrepotUpdate(Request $request)
     {
         $user = Utilisateur::find(session()->get('logged'));
-        $entrepots = Entrepot::where('Etat', 0)->get();
-        return view('client.pages.Entrepots.lister', compact('user', 'entrepots'));
+
+        $this->validate($request, [
+            'Description' => ['required'],
+            'Adresse' => ['required'],
+        ]);
+        $entrepot = Entrepot::find($request->input('Id'));
+        $oldDescription = $entrepot->Description;
+        $oldAdresse = $entrepot->Adresse;
+        $modif = array();
+        if ($entrepot->Description != $request->input('Description')) {
+            $modif[2000] = 'Modification de ' . $oldDescription . ' en ' . $request->input('Description') . ' réussie.';
+        }
+        if ($entrepot->Adresse != $request->input('Adresse')) {
+            $modif[4000] = 'Modification de ' . $oldAdresse . ' en ' . $request->input('Adresse') . ' réussie.';
+        }
+        if (count($modif) != 0)
+            return redirect()->route('User.Entrepot.List')->with('Success', $modif);
+        else
+            return redirect()->route('User.Entrepot.List');
     }
 
     public function EntrepotDelete($id)
