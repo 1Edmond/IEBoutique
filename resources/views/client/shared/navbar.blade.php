@@ -57,10 +57,8 @@
                     </div>
                     <div id="NavArticles" class="tab-pane notika-tab-menu-bg animated flipInX">
                         <ul class="notika-main-menu-dropdown">
-                            <li><a href="">Lister les articles</a></li>
-                            <li><a href="">Ajouter un article</a></li>
-                            <li><a href="">Modifier un article</a></li>
-                            <li><a href="">Suprimer un article</a></li>
+                            <li><a href="{{ route('User.Article.List') }}">Lister les articles</a></li>
+                            <li><a href="{{ route('User.Article.AddPage') }}">Ajouter un article</a></li>
                         </ul>
                     </div>
                     <div id="NavCategories" class="tab-pane notika-tab-menu-bg animated flipInX">

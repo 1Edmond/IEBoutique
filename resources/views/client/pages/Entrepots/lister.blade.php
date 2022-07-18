@@ -249,11 +249,6 @@
                                                         <small id="helpDescription{{ $item->id }}"
                                                             class="form-text text-muted">Description Help
                                                             text</small>
-                                                        @error('Description')
-                                                            <div class="alert alert-danger" role="alert">
-                                                                <strong>{{ $message }}</strong>
-                                                            </div>
-                                                        @enderror
                                                     </div>
                                                     <div class="mb-3 col-lg-6" hidden>
                                                         <input type="hidden" class="form-control" name="Id"
@@ -271,11 +266,6 @@
                                                             placeholder="Saisissez l'addresse de l'entrepôt">
                                                         <small id="helpAddresse{{ $item->id }}"
                                                             class="form-text text-muted">Addresse Help text</small>
-                                                        @error('Adresse')
-                                                            <div class="alert alert-danger" role="alert">
-                                                                <strong>{{ $message }}</strong>
-                                                            </div>
-                                                        @enderror
                                                     </div>
                                                     </p>
                                                 </div>
@@ -321,28 +311,25 @@
     @if (Session::get('Success'))
         @foreach (Session::get('Success') as $item => $value)
             <script>
-                //notify4("bottom", "center", nIcons, "inverse", nAnimIn, nAnimOut);
                 $.growl('{{ $value }}', {
                     type: 'success',
-                    delay: 2000 + {{$item}},
+                    delay: 2000 + {{ $item }},
                 });
             </script>
         @endforeach
     @endif
-    @if (Session::get('Fail'))
+    @if (Session::get('fail'))
         <script>
-            //notify4("bottom", "center", nIcons, "inverse", nAnimIn, nAnimOut);
-            $.growl("{{ Session::get('Fail') }}", {
+            $.growl("{{ Session::get('fail') }}", {
                 type: 'danger',
-                delay: 5000,
+                delay: 7000,
             });
         </script>
     @endif
     @if ($errors->any())
         @foreach ($errors->all() as $error)
             <script>
-                //notify4("bottom", "center", nIcons, "inverse", nAnimIn, nAnimOut);
-                $.growl("Erreur, liser le message d'erreur pour résoudre le problème", {
+                $.growl("{{ $error }}", {
                     type: 'info',
                     delay: 5000,
                 });

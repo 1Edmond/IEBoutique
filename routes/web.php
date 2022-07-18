@@ -66,6 +66,36 @@ Route::post('user/categorie/add', [UsersController::class, 'AddCategorie'])->nam
 
 #endregion
 
+#region Article
+
+
+/* 
+        Page de la liste des articles
+*/
+Route::get('user/article/list', [UsersController::class, 'Articles'])->name('User.Article.List');
+
+/* 
+        Page d'ajout d'un article
+*/
+Route::get('user/article/add', [UsersController::class, 'AddArticlePage'])->name('User.Article.AddPage');
+
+/* 
+        Méthode d'ajout d'un article
+*/
+Route::post('user/article/add', [UsersController::class, 'AddArticle'])->name('User.Article.Add');
+
+/* 
+        Méthode de suppression d'un article
+*/
+Route::get('user/article/delete/{id}', [UsersController::class, 'ArticleDelete'])->name('User.Article.Delete');
+/* 
+       Méthode de modification d'un article
+*/
+Route::post('user/article/update', [UsersController::class, 'ArticleUpdate'])->name('User.Article.Update');
+
+
+#endregion
+
 #region Entrepôt
 
 /*

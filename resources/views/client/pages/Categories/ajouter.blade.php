@@ -2,6 +2,7 @@
 
 @section('style')
     <link rel="stylesheet" href="/client/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="/client/css/notification/notification.css">
 @endsection
 
 @section('InfoLabel')
@@ -29,11 +30,6 @@
                                 Tous les champs ci dessous sont nécessaires pour ajouter une nouvele catégorie.
                             </p>
                         </div>
-                        @if (Session::get('success'))
-                            <div class="alert alert-success">
-                                {{ Session::get('success') }}
-                            </div>
-                        @endif
                         <form action="{{ route('User.Categorie.Add') }}" method="post">
                             @csrf
                             <div class="mb-3 col-lg-6">
@@ -74,11 +70,29 @@
 @section('script')
     <script src="/client/js/icheck/icheck.min.js"></script>
     <script src="/client/js/icheck/icheck-active.js"></script>
+    <script src="/client/js/notification/bootstrap-growl.min.js"></script>
     <!-- Data Table JS
-                                                                                                                                                                                                                                              ============================================ -->
+                                                                                                                                                                                                                                                                                      ============================================ -->
     <script src="/client/js/data-table/jquery.dataTables.min.js"></script>
     <script src="/client/js/data-table/data-table-act.js"></script>
-
+    @if ($errors->any())
+        @foreach ($errors->all() as $error)
+            <script>
+                $.growl("{{ $error }}", {
+                    type: 'info',
+                    delay: 5000,
+                });
+            </script>
+        @endforeach
+    @endif
+    @if (Session::get('success'))
+        <script>
+            $.growl("{{ Session::get('success') }}", {
+                type: 'success',
+                delay: 5000,
+            });
+        </script>
+    @endif
     <script>
         $('#CategorieNavHeader').class = "active"
         $('#NavCategorie').class = "active"
