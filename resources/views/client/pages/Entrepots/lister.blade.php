@@ -42,14 +42,15 @@
                             <p>La liste des entrepôts s'afficheront en dessous, vous pouvez recherchez une entrepôts en
                                 particulier ou également trier la liste des entrepôts obtenues.</p>
                         </div>
-                        <div class="table-responsive">
+                        <div class="table-responsive bsc-tbl-cds">
                             <table id="EntrepotDataTable" class="table table-striped table-inbox table-hover">
                                 <thead>
                                     <tr>
                                         <th class="text-center">Decsription</th>
                                         <th class="text-center">Addresse</th>
                                         <th class="text-center">Date d'ajout</th>
-                                        <th class="text-center">Nombre d'article</th>
+                                        <th class="text-center">Nombre d'articles</th>
+                                        <th class="text-center">Quantité total</th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -59,7 +60,20 @@
                                             <td class="text-center">{{ $item->Description }}</td>
                                             <td class="text-center">{{ $item->Adresse }}</td>
                                             <td class="text-center">{{ $item->DateAjout }}</td>
-                                            <td class="text-center">{{ $item->id }}</td>
+                                            <td class="text-center">
+                                                @if (array_key_exists($item->id, $Total))
+                                                    {{ $Total[$item->id] }}
+                                                @else
+                                                    0
+                                                @endif
+                                            </td>
+                                            <td class="text-center">
+                                                @if (array_key_exists($item->id, $Quantite))
+                                                    {{ $Quantite[$item->id] }}
+                                                @else
+                                                    0
+                                                @endif
+                                            </td>
                                             <td class="text-center button-icon-btn button-icon-btn-cl sm-res-mg-t-30">
                                                 <button class="btn btn-danger danger-icon-notika btn-reco-mg btn-button-mg"
                                                     data-toggle="modal" data-target="#supprimermodal{{ $item->id }}"
@@ -93,6 +107,7 @@
                                         <th class="text-center">Addresse</th>
                                         <th class="text-center">Date d'ajout</th>
                                         <th class="text-center">Nombre d'article</th>
+                                        <th class="text-center">Quantité total</th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </tfoot>
@@ -130,8 +145,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="modal animated rubberBand" id="detailsmodal{{ $item->id }}" tabindex="-1"
-                                    role="dialog" aria-labelledby="detailsmodalLabel" aria-hidden="true">
+                                <div class="modal modal animated rubberBand" id="detailsmodal{{ $item->id }}"
+                                    tabindex="-1" role="dialog" aria-labelledby="detailsmodalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-sm-2" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -179,9 +194,19 @@
                                                                             </li>
                                                                             <li>
                                                                                 Nombre total d'articles :
-                                                                                <strong>
-                                                                                    {{ $item->id }}
-                                                                                </strong>
+                                                                                @if (array_key_exists($item->id, $Total))
+                                                                                    {{ $Total[$item->id] }}
+                                                                                @else
+                                                                                    0
+                                                                                @endif
+                                                                            </li>
+                                                                            <li>
+                                                                                Quantité total des articles :
+                                                                                @if (array_key_exists($item->id, $Quantite))
+                                                                                    {{ $Quantite[$item->id] }}
+                                                                                @else
+                                                                                    0
+                                                                                @endif
                                                                             </li>
                                                                         </p>
                                                                     </div>
@@ -202,9 +227,107 @@
                                                                 <div id="accordionBlue-two{{ $item->id }}"
                                                                     class="collapse animated zoomInLeft" role="tabpanel">
                                                                     <div class="panel-body">
-                                                                        <p>
-                                                                            Liste des articles de l'entrepot à mettre ici.
-                                                                        </p>
+                                                                        <table
+                                                                            class="table table-responsive table-hover table-striped"
+                                                                            id="EntrepotArticleTable{{ $item->id }}">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th class="text-center">Libelle</th>
+                                                                                    <th class="text-center">Description
+                                                                                    </th>
+                                                                                    <th class="text-center">Prix</th>
+                                                                                    <th class="text-center">Seuil</th>
+                                                                                    <th class="text-center">Quantité</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                @forelse ($entrepotArticle as $dt)
+                                                                                    @if ($dt->entrepot == $item->id)
+                                                                                        <tr>
+                                                                                            <td>{{ $dt->Libelle }}</td>
+                                                                                            <td>{{ $dt->Description }}
+                                                                                            </td>
+                                                                                            <td>{{ $dt->Prix }}</td>
+                                                                                            <td>{{ $dt->Seuil }}</td>
+                                                                                            <td>{{ $dt->Quantite }}</td>
+                                                                                        </tr>
+                                                                                    @endif
+                                                                                @empty
+                                                                                @endforelse
+                                                                            </tbody>
+                                                                            <tfoot>
+                                                                                <tr>
+                                                                                    <th class="text-center">Libelle</th>
+                                                                                    <th class="text-center">Description
+                                                                                    </th>
+                                                                                    <th class="text-center">Prix</th>
+                                                                                    <th class="text-center">Seuil</th>
+                                                                                    <th class="text-center">Quantité</th>
+                                                                                </tr>
+                                                                            </tfoot>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="panel panel-collapse notika-accrodion-cus">
+                                                                <div class="panel-heading" role="tab">
+                                                                    <h4 class="panel-title">
+                                                                        <a class="collapsed" data-toggle="collapse"
+                                                                            data-parent="#accordionBlue{{ $item->id }}"
+                                                                            href="#accordionBlue-three{{ $item->id }}"
+                                                                            aria-expanded="false">
+                                                                            Liste des articles en dessous du seuil de
+                                                                            l'entrepôt
+                                                                            {{ $item->Description }}
+                                                                        </a>
+                                                                    </h4>
+                                                                </div>
+                                                                <div id="accordionBlue-three{{ $item->id }}"
+                                                                    class="collapse animated zoomInLeft" role="tabpanel">
+                                                                    <div class="panel-body">
+                                                                        <table
+                                                                            class="table table-responsive table-hover table-striped"
+                                                                            id="EntrepotArticleTableSeuil{{ $item->id }}">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th class="text-center">Libelle</th>
+                                                                                    <th class="text-center">Description
+                                                                                    </th>
+                                                                                    <th class="text-center">Prix</th>
+                                                                                    <th class="text-center">Seuil</th>
+                                                                                    <th class="text-center">Quantité</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                @forelse ($entrepotArticleSeuil as $dt)
+                                                                                    @if ($dt->entrepot == $item->id)
+                                                                                        <tr>
+                                                                                            <td>{{ $dt->Libelle }}</td>
+                                                                                            <td>{{ $dt->Description }}
+                                                                                            </td>
+                                                                                            <td>{{ $dt->Prix }}</td>
+                                                                                            <td>{{ $dt->Seuil }}</td>
+                                                                                            <td>{{ $dt->Quantite }}</td>
+                                                                                        </tr>
+                                                                                    @endif
+                                                                                @empty
+                                                                                    <td colspan="5"
+                                                                                        class="text-center">Aucun article
+                                                                                        en dessous du seuil dans l'entrepot
+                                                                                        {{ $item->Description }}</td>
+                                                                                @endforelse
+                                                                            </tbody>
+                                                                            <tfoot>
+                                                                                <tr>
+                                                                                    <th class="text-center">Libelle</th>
+                                                                                    <th class="text-center">Description
+                                                                                    </th>
+                                                                                    <th class="text-center">Prix</th>
+                                                                                    <th class="text-center">Seuil</th>
+                                                                                    <th class="text-center">Quantité</th>
+                                                                                </tr>
+                                                                            </tfoot>
+                                                                        </table>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -307,33 +430,35 @@
                 }
             });
         });
+        var EntrepotsNavHeader = document.getElementById("EntrepotsNavHeader");
+        var NavEntrepots = document.getElementById("NavEntrepots");
+        var oldClassHeader = EntrepotsNavHeader.getAttribute("class");
+        var oldClassNav = NavEntrepots.getAttribute("class");
+        EntrepotsNavHeader.setAttribute("class", oldClassHeader + " active");
+        NavEntrepots.setAttribute("class", oldClassNav + " active");
     </script>
-    @if (Session::get('Success'))
-        @foreach (Session::get('Success') as $item => $value)
-            <script>
-                $.growl('{{ $value }}', {
-                    type: 'success',
-                    delay: 2000 + {{ $item }},
-                });
-            </script>
-        @endforeach
-    @endif
-    @if (Session::get('fail'))
+    @foreach ($entrepots as $item)
         <script>
-            $.growl("{{ Session::get('fail') }}", {
-                type: 'danger',
-                delay: 7000,
+            $('#EntrepotArticleTable{{ $item->id }}').DataTable({
+                scrollY: '100px',
+                select: true,
+                stateSave: true,
+                scrollCollapse: true,
+                paging: true,
+                "language": {
+                    "url": "/French.json"
+                }
+            });
+            $('#EntrepotArticleTableSeuil{{ $item->id }}').DataTable({
+                scrollY: '100px',
+                select: true,
+                stateSave: true,
+                scrollCollapse: true,
+                paging: true,
+                "language": {
+                    "url": "/French.json"
+                }
             });
         </script>
-    @endif
-    @if ($errors->any())
-        @foreach ($errors->all() as $error)
-            <script>
-                $.growl("{{ $error }}", {
-                    type: 'info',
-                    delay: 5000,
-                });
-            </script>
-        @endforeach
-    @endif
+    @endforeach
 @endsection

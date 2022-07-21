@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- favicon
   ============================================ -->
-  @yield('style')
+    @yield('style')
     <link rel="shortcut icon" type="image/x-icon" href="/client/img/favicon.ico">
     <!-- Google Fonts
   ============================================ -->
@@ -149,7 +149,47 @@
     <!-- tawk chat JS
   ============================================ -->
     <script src="/client/js/tawk-chat.js"></script>
+    <script src="/client/js/notification/bootstrap-growl.min.js"></script>
+
     @yield('script')
+
+    @if (Session::get('Success'))
+        @if (count(Session::get('Success')) > 0)
+            @foreach (Session::get('Success') as $item => $value)
+                <script>
+                    $.growl('{{ $value }}', {
+                        type: 'success',
+                        delay: 2000 + {{ $item }},
+                    });
+                </script>
+            @endforeach
+        @else
+            <script>
+                $.growl("{{ Session::get('Success') }}", {
+                    type: 'success',
+                    delay: 2000,
+                });
+            </script>
+        @endif
+    @endif
+    @if (Session::get('fail'))
+        <script>
+            $.growl("{{ Session::get('fail') }}", {
+                type: 'danger',
+                delay: 7000,
+            });
+        </script>
+    @endif
+    @if ($errors->any())
+        @foreach ($errors->all() as $error)
+            <script>
+                $.growl("{{ $error }}", {
+                    type: 'info',
+                    delay: 5000,
+                });
+            </script>
+        @endforeach
+    @endif
 </body>
 
 </html>

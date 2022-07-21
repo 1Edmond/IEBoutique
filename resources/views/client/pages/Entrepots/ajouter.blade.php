@@ -102,7 +102,11 @@
         </script>
     @endif
     <script>
-        $('#CategorieNavHeader').class = "active"
-        $('#NavCategorie').class = "active"
+      var EntrepotsNavHeader = document.getElementById("EntrepotsNavHeader");
+        var NavEntrepots = document.getElementById("NavEntrepots");
+        var oldClassHeader = EntrepotsNavHeader.getAttribute("class");
+        var oldClassNav = NavEntrepots.getAttribute("class");
+        EntrepotsNavHeader.setAttribute("class", oldClassHeader + " active");
+        NavEntrepots.setAttribute("class", oldClassNav + " active");
     </script>
 @endsection

@@ -2,6 +2,8 @@
 @section('style')
     <link rel="stylesheet" href="/client/css/animate.css">
     <link rel="stylesheet" href="/client/css/animation/animation-custom.css">
+    <link rel="stylesheet" href="/client/css/chosen/chosen.css">
+
 @endsection
 
 @section('InfoLabel')
@@ -33,10 +35,9 @@
                                         <label class="hrzn-fm">Formule d'abonnement</label>
                                     </div>
                                     <div class="col-lg-8 col-md-7 col-sm-7 col-xs-12">
-                                        <div class="nk-int-st fm-cmp-mg">
+                                        <div class="chosen-select-act fm-cmp-mg">
                                             <select class="chosen" id="FormuleSelected" onchange="FormuleContrainte();"
                                                 name="Formule">
-                                                <option disabled selected value="">Faite votre choix</option>
                                                 @forelse ($formules as $item)
                                                     <option value="{{ $item->Libelle }}">
                                                         {{ $item->Libelle }}
@@ -124,34 +125,46 @@ GROUP BY tarifs.Libelle, avantages.Description; --}}
                 </div>
             </div>
         </div>
-    @endsection
+    </div>
+@endsection
 
-    @section('script')
-        <script src="/client/js/animation/animation-active.js"></script>
-        <script src="/client/js/dropzone/dropzone.js"></script>
-        <script src="/client/js/bootstrap-select/bootstrap-select.js"></script>
-        <script src="/client/js/chosen/chosen.jquery.js"></script>
-        <script>
-            function FormuleContrainte(test = {!! json_encode($formules) !!}) {
-                var tem = test;
-                let selected = document.getElementById('FormuleSelected').value
-                tem.forEach(element => {
-                    if (element['Libelle'] == selected) {
-                        document.getElementById('AbonnementDure').value = element['DureeTarif']
-                        document.getElementById('AbonnementDure').min = element['DureeTarif']
-                        document.getElementById('AbonnementDure').max = element['DureeTarif'] * 2
-                        document.getElementById('AbonnementPrix').innerHTML = "Prix total = " + element['Prix'] +
-                            " francs CFA";
-                        $('.collapse').collapse('hide');
-                        $('#FormuleLabel').innerHTML = "Formule choisie";
-                        $('#Avantages' + element['id']).collapse('show');
+@section('script')
+    <script src="/client/js/animation/animation-active.js"></script>
+    <script src="/client/js/dropzone/dropzone.js"></script>
+    <script src="/client/js/bootstrap-select/bootstrap-select.js"></script>
+    <script src="/client/js/chosen/chosen.jquery.js"></script>
+    <script>
+        var NavAbonnementHeader = document.getElementById("AbonnementNavHeader");
+        var NavAbonnement = document.getElementById("NavAbonnement");
+        var oldClassHeader = NavAbonnementHeader.getAttribute("class");
+        var oldClassNav = NavAbonnement.getAttribute("class");
+        NavAbonnementHeader.setAttribute("class", oldClassHeader + " active");
+        NavAbonnement.setAttribute("class", oldClassNav + " active");
+        $(".chosen").chosen({
+            disable_search_threshold: 2,
+            no_results_text: "Oops, aucune donnée de disponible!",
+            width: "95%"
+        });
+        function FormuleContrainte(test = {!! json_encode($formules) !!}) {
+            var tem = test;
+            let selected = document.getElementById('FormuleSelected').value
+            tem.forEach(element => {
+                if (element['Libelle'] == selected) {
+                    document.getElementById('AbonnementDure').value = element['DureeTarif']
+                    document.getElementById('AbonnementDure').min = element['DureeTarif']
+                    document.getElementById('AbonnementDure').max = element['DureeTarif'] * 2
+                    document.getElementById('AbonnementPrix').innerHTML = "Prix total = " +
+                        element['Prix'] + " francs CFA";
+                    $('.collapse').collapse('hide');
+                    $('#FormuleLabel').innerHTML = "Formule choisie";
+                    $('#Avantages' + element['id']).collapse('show');
 
-                    }
-                });
-            }
+                }
+            });
+        }
 
-            function Reset() {
-                $('.collapse').collapse('hide');
-            }
-        </script>
-    @endsection
+        function Reset() {
+            $('.collapse').collapse('hide');
+        }
+    </script>
+@endsection

@@ -15,6 +15,7 @@ class Article extends Model
         'Seuil',
         'Etat',
         'DateAjout',
+        'CategorieId',
     ];
     public $timestamps = false;
 }

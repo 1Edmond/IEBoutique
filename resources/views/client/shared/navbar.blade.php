@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
-                    <li id="AbonnementNavHeader" class="active"><a data-toggle="tab" href="#NavAbonnement"><i
+                    <li id="AbonnementNavHeader"><a data-toggle="tab" href="#NavAbonnement"><i
                                 class="notika-icon notika-house"></i>
                             Abonnement</a>
                     </li>
@@ -37,7 +37,7 @@
                     </li>
                 </ul>
                 <div class="tab-content custom-menu-content">
-                    <div id="NavAbonnement" class="tab-pane in active notika-tab-menu-bg animated flipInX">
+                    <div id="NavAbonnement" class="tab-pane in notika-tab-menu-bg animated flipInX">
                         <ul class="notika-main-menu-dropdown">
                             <li><a href="{{ route('User.Abonnement.List') }}">Voir mes abonnements</a>
                             </li>
@@ -79,6 +79,11 @@
                         <ul class="notika-main-menu-dropdown">
                             <li><a href="{{ route('User.Entrepot.List') }}">Voir tous les entrepôts</a></li>
                             <li><a href="{{ route('User.Entrepot.AddPage') }}">Ajouter un entrepôt</a></li>
+                            <li>
+                                <a href="{{ route('User.Entrepot.Approvisionnement') }}">
+                                    Approvisionnement entre entrepôt
+                                </a>
+                            </li>
                         </ul>
                     </div>
                     <div id="NavFournisseurs" class="tab-pane notika-tab-menu-bg animated flipInX">
@@ -100,7 +105,7 @@
                     <div id="NavVentes" class="tab-pane notika-tab-menu-bg animated flipInX">
                         <ul class="notika-main-menu-dropdown">
                             <li><a href="">Voir toutes les ventes</a></li>
-                            <li><a href="">Faire une vente</a></li>
+                            <li><a href="{{route('User.Vente.AddPage')}}">Faire une vente</a></li>
                             <li><a href="">Modifier une vente</a></li>
                             <li><a href="">Supprimer une vente</a></li>
                         </ul>

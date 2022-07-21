@@ -10,7 +10,15 @@ use Illuminate\Support\Facades\Hash;
 class PagesController extends Controller
 {
     public function Index(){
+        return view('index');
+    }
+    
+    public function LoginPage(){
         return view('auth.login');
+    }
+    
+    public function SignInPage(){
+        return view('auth.signIn');
     }
     
     public function Login(Request $request){

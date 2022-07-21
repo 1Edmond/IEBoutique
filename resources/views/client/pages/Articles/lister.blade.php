@@ -33,47 +33,46 @@
                             <p>La liste des articles s'afficheront en dessous, vous pouvez recherchez une articles en
                                 particulier ou également trier la liste des articles obtenues.</p>
                         </div>
-                        <div class="table-responsive">
-                            <table id="EntrepotDataTable" class="table table-striped table-inbox table-hover">
+                        <div class="table bsc-tbl-cds">
+                            <table id="ArticleDataTable" class="table-striped wrap table-hover">
                                 <thead>
                                     <tr>
-                                        <th class="text-center">Libelle</th>
-                                        <th class="text-center">Description</th>
-                                        <th class="text-center">Date d'ajout</th>
-                                        <th class="text-center">Prix</th>
-                                        <th class="text-center">Seuil</th>
-                                        <th class="text-center">Catégorie</th>
-                                        <th class="text-center">Entrepôt</th>
-                                        <th class="text-center">Action</th>
+                                        <th class="text-center text-truncate" style="max-width: 50px;">Libelle</th>
+                                        <th class="text-center text-truncate" style="max-width: 50px;">Description</th>
+                                        <th class="text-center text-truncate" style="max-width: 50px;">Prix</th>
+                                        <th class="text-center text-truncate" style="max-width: 50px;">Date d'ajout</th>
+                                        <th class="text-center text-truncate" style="max-width: 50px;">Catégorie</th>
+                                        <th class="text-center text-truncate" style="max-width: 50px;">Entrepôt</th>
+                                        <th class="text-center text-truncate" style="max-width: 50px;">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @forelse ($articles as $item)
+                                        <div class="hidden" aria-hidden="true">
+                                            <input type="hidden" value="{{ $articleEntrepot = ' ' }}">
+                                            @foreach ($entrepots as $en)
+                                                @if ($en->ArticleId == $item->id)
+                                                    @if ($articleEntrepot == ' ')
+                                                        <input type="hidden"
+                                                            value="{{ $articleEntrepot .= $en->Description }}">
+                                                    @else
+                                                        <input type="hidden"
+                                                            value="{{ $articleEntrepot .= ', ' . $en->Description }}">
+                                                    @endif
+                                                @endif
+                                            @endforeach
+                                        </div>
                                         <tr>
-                                            <td class="text-center">{{ $item->Libelle }}</td>
+                                            <th class="text-center" scope="row">
+                                                {{ $item->Libelle }}</th>
                                             <td class="text-center">{{ $item->Description }}</td>
-                                            <td class="text-center">{{ $item->DateAjout }}</td>
                                             <td class="text-center">{{ $item->Prix }} fcfa</td>
-                                            <td class="text-center">{{ $item->Seuil }}</td>
+                                            <td class="text-center">{{ $item->DateAjout }}</td>
                                             <td class="text-center">{{ $item->Categorie }}</td>
                                             <td class="text-center">
-
-                                                <input type="hidden" value="{{ $element = '' }}">
-                                                @foreach ($entrepots as $en)
-                                                    @if ($en->ArticleId == $item->id)
-                                                        @if ($element == '')
-                                                            <input type="hidden"
-                                                                value="{{ $element .= $en->Description }}">
-                                                        @else
-                                                            <input type="hidden"
-                                                                value="{{ $element .= ', ' . $en->Description }}">
-                                                        @endif
-                                                    @endif
-                                                @endforeach
-                                                {{ $element }}
-
+                                                {{ $articleEntrepot }}
                                             </td>
-                                            <td class="text-center button-icon-btn button-icon-btn-cl sm-res-mg-t-30">
+                                            <td class="text-center button-icon-btn  button-icon-btn-cl sm-res-mg-t-30">
                                                 <button class="btn btn-danger danger-icon-notika btn-reco-mg btn-button-mg"
                                                     data-toggle="modal" data-target="#supprimermodal{{ $item->id }}"
                                                     rel="tooltip" data-placement="left"
@@ -102,14 +101,13 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th class="text-center">Libelle</th>
-                                        <th class="text-center">Description</th>
-                                        <th class="text-center">Date d'ajout</th>
-                                        <th class="text-center">Prix</th>
-                                        <th class="text-center">Seuil</th>
-                                        <th class="text-center">Catégorie</th>
-                                        <th class="text-center">Entrepôt</th>
-                                        <th class="text-center">Action</th>
+                                        <th class="text-center text-truncate" style="max-width: 50px;">Libelle</th>
+                                        <th class="text-center text-truncate" style="max-width: 50px;">Description</th>
+                                        <th class="text-center text-truncate" style="max-width: 50px;">Prix</th>
+                                        <th class="text-center text-truncate" style="max-width: 50px;">Date d'ajout</th>
+                                        <th class="text-center text-truncate" style="max-width: 50px;">Catégorie</th>
+                                        <th class="text-center text-truncate" style="max-width: 50px;">Entrepôt</th>
+                                        <th class="text-center text-truncate" style="max-width: 50px;">Action</th>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -250,8 +248,7 @@
                                                                 <div id="accordionBlue-two{{ $item->id }}"
                                                                     class="collapse animated zoomInLeft" role="tabpanel">
                                                                     <div class="panel-body">
-                                                                        <table
-                                                                            class="table table-responsive table-hover table-striped"
+                                                                        <table class="table table-hover table-striped"
                                                                             id="ArticleEntrepotTable{{ $item->id }}">
                                                                             <thead>
                                                                                 <tr>
@@ -278,7 +275,10 @@
                                                                                                 {{ $entrepot->DateAjout }}
                                                                                             </td>
                                                                                             <td class="text-center">
-                                                                                                {{ $entrepot->id }}
+                                                                                                @if (array_key_exists($entrepot->EntrepotId, $Total))
+                                                                                                    {{ $Total[$entrepot->EntrepotId] }}
+                                                                                                @else
+                                                                                                @endif
                                                                                             </td>
                                                                                         </tr>
                                                                                     @endif
@@ -380,8 +380,8 @@
                                                         <label for="Libelle{{ $item->id }}"
                                                             class="form-label">Libelle</label>
                                                         <input type="text" class="form-control" name="Libelle"
-                                                            id="Libelle{{ $item->id }}"
-                                                            value="{{ $item->Libelle }}" max="150"
+                                                            id="Libelle{{ $item->id }}" value="{{ $item->Libelle }}"
+                                                            max="150"
                                                             aria-describedby="helpLibelle{{ $item->id }}"
                                                             placeholder="Saisissez le libelle de l'article">
                                                         <small id="helpLibelle{{ $item->id }}"
@@ -492,46 +492,29 @@
 @endsection
 
 @section('script')
-
     <script src="/client/js/chosen/chosen.jquery.js"></script>
     <script src="/client/js/data-table/jquery.dataTables.min.js"></script>
     <script src="/client/js/animation/animation-active.js"></script>
-    <script src="/client/js/notification/bootstrap-growl.min.js"></script>
-
-
-
     <script>
+        var NavArticles = document.getElementById("ArticleNavHeader");
+        var NavArticle = document.getElementById("NavArticles");
+        var oldClassHeader = NavArticles.getAttribute("class");
+        var oldClassNav = NavArticle.getAttribute("class");
+        NavArticles.setAttribute("class", oldClassHeader + " active");
+        NavArticle.setAttribute("class", oldClassNav + " active");
         $(document).ready(function() {
             $('[rel="tooltip"]').tooltip({
                 trigger: "hover"
             });
-            $('#EntrepotDataTable').DataTable({
+            $('#ArticleDataTable').DataTable({
                 "language": {
                     "url": "/French.json"
-                }
+                },
+
             });
 
         });
     </script>
-    @if (Session::get('Success'))
-        @if (count(Session::get('Success')) > 0)
-            @foreach (Session::get('Success') as $item => $value)
-                <script>
-                    $.growl('{{ $value }}', {
-                        type: 'success',
-                        delay: 2000 + {{ $item }},
-                    });
-                </script>
-            @endforeach
-        @else
-            <script>
-                $.growl("{{ Session::get('Success') }}", {
-                    type: 'success',
-                    delay: 2000,
-                });
-            </script>
-        @endif
-    @endif
     <script>
         $(".chosen").chosen({
             disable_search_threshold: 5,
@@ -549,26 +532,8 @@
                 paging: true,
                 "language": {
                     "url": "/French.json"
-                }
+                },
             });
         </script>
     @endforeach
-    @if (Session::get('fail'))
-        <script>
-            $.growl("{{ Session::get('fail') }}", {
-                type: 'danger',
-                delay: 7000,
-            });
-        </script>
-    @endif
-    @if ($errors->any())
-        @foreach ($errors->all() as $error)
-            <script>
-                $.growl("{{ $error }}", {
-                    type: 'info',
-                    delay: 5000,
-                });
-            </script>
-        @endforeach
-    @endif
 @endsection

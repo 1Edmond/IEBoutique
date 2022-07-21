@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Route;
 Route::post('auth/admin/login', [PagesController::class, 'Login'])->name('Login'); // Faut créer une page pour les utilisateurs aussi
 Route::get('/', [PagesController::class, 'Index'])->name('Index');
 
+Route::get('/login',[PagesController::class, 'LoginPage'])->name('LoginPage');
+Route::get('/signIn',[PagesController::class, 'SignInPage'])->name('SignInPage');
 
 
 #region Utilisateur
@@ -96,12 +98,23 @@ Route::post('user/article/update', [UsersController::class, 'ArticleUpdate'])->n
 
 #endregion
 
+#region Vente
+
+Route::get('user/vente/list',[UsersController::class,'VentePage'])->name('User.Vente.AddPage');
+
+#endregion
+
 #region Entrepôt
 
 /*
     Page de la liste des entrepôts disponibles
 */
 Route::get('user/entrepot/list', [UsersController::class, 'Entrepots'])->name('User.Entrepot.List');
+
+/*
+    Page d'approvisionnement entre entrepots
+*/
+Route::get('user/entrepot/approvisionnement', [UsersController::class, 'EntrepotApprovisionnement'])->name('User.Entrepot.Approvisionnement');
 
 /*
     Page d'ajout d'un entrepôt

@@ -79,7 +79,7 @@
     <script src="/client/js/icheck/icheck.min.js"></script>
     <script src="/client/js/icheck/icheck-active.js"></script>
     <!-- Data Table JS
-                                                                                                              ============================================ -->
+                                                                                                                  ============================================ -->
     <script src="/client/js/data-table/jquery.dataTables.min.js"></script>
     <script src="/client/js/data-table/data-table-act.js"></script>
 
@@ -90,7 +90,11 @@
             }
         });
 
-        $('#CategorieNavHeader').class = "active"
-        $('#NavCategorie').class = "active"
+        var CategorieNavHeader = document.getElementById("CategorieNavHeader");
+        var NavCategories = document.getElementById("NavCategories");
+        var oldClassHeader = CategorieNavHeader.getAttribute("class");
+        var oldClassNav = NavCategories.getAttribute("class");
+        CategorieNavHeader.setAttribute("class", oldClassHeader + " active");
+        NavCategories.setAttribute("class", oldClassNav + " active");
     </script>
 @endsection
