@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdministrateursController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\UsersController;
+use App\Models\Utilisateur;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,8 +21,8 @@ use Illuminate\Support\Facades\Route;
 Route::post('auth/admin/login', [PagesController::class, 'Login'])->name('Login'); // Faut créer une page pour les utilisateurs aussi
 Route::get('/', [PagesController::class, 'Index'])->name('Index');
 
-Route::get('/login',[PagesController::class, 'LoginPage'])->name('LoginPage');
-Route::get('/signIn',[PagesController::class, 'SignInPage'])->name('SignInPage');
+Route::get('/login', [PagesController::class, 'LoginPage'])->name('LoginPage');
+Route::get('/signIn', [PagesController::class, 'SignInPage'])->name('SignInPage');
 
 
 #region Utilisateur
@@ -98,9 +99,59 @@ Route::post('user/article/update', [UsersController::class, 'ArticleUpdate'])->n
 
 #endregion
 
+#region Modèle
+
+/* 
+        Page d'ajout de modèle d'article.
+*/
+Route::get('user/modele/add', [UsersController::class, 'ModeleAddPage'])->name('User.Modele.AddPage');
+
+
+/* 
+        Page de la liste des modèles d'article.
+*/
+Route::get('user/modele/list', [UsersController::class, 'Modeles'])->name('User.Modele.List');
+
+/* 
+        Méthode de suppression de modèle d'article.
+*/
+Route::get('user/modele/delete/{id}', [UsersController::class, 'ModeleDelete'])->name('User.Modele.Delete');
+
+/* 
+       Méthode d'ajout de modèle d'article.
+*/
+Route::post('user/modele/add', [UsersController::class, 'ModeleAdd'])->name('User.Modele.Add');
+
+/* 
+       Méthode de modification de modèle d'article.
+*/
+Route::post('user/modele/update', [UsersController::class, 'ModeleUpdate'])->name('User.Modele.Update');
+
+#endregion
+
 #region Vente
 
-Route::get('user/vente/list',[UsersController::class,'VentePage'])->name('User.Vente.AddPage');
+
+/* 
+        Page de la liste des ventes.
+*/
+Route::get('user/vente/list', [UsersController::class, 'Ventes'])->name('User.Vente.List');
+
+/* 
+        Page d'ajout de vente.
+*/
+Route::get('user/vente/add', [UsersController::class, 'VentePage'])->name('User.Vente.AddPage');
+
+/* 
+        Méthode d'ajout de vente.
+*/
+Route::post('user/vente/add', [UsersController::class, 'VenteAdd'])->name('User.Vente.Add');
+
+/* 
+        Méthode de suppression de vente.
+*/
+Route::get('user/vente/delete/{id}', [UsersController::class, 'VenteDelete'])->name('User.Vente.Delete');
+
 
 #endregion
 
@@ -143,6 +194,83 @@ Route::get('user/entrepot/delete/{id}', [UsersController::class, 'EntrepotDelete
         Page de payement d'abonnement
 */
 Route::get('user/paiement', [UsersController::class, 'PaiementPage'])->name('User.Paiement.Page');
+#endregion
+
+#region Fournisseur
+
+/* 
+        Page de la liste des fournisseur.
+*/
+Route::get('user/fournisseur/list', [UsersController::class, 'Fournisseurs'])->name('User.Fournisseur.List');
+
+/* 
+        Page d'ajout de fournisseur.
+*/
+Route::get('user/fournisseur/add', [UsersController::class, 'FournisseurAddPage'])->name('User.Fournisseur.AddPage');
+
+/* 
+        Méthode d'ajout de fournisseur.
+*/
+Route::post('user/fournisseur/add', [UsersController::class, 'FournisseurAdd'])->name('User.Fournisseur.Add');
+
+/* 
+        Méthode de modification de fournisseur.
+*/
+Route::post('user/fournisseur/update', [UsersController::class, 'FournisseurUpdate'])->name('User.Fournisseur.Update');
+
+/* 
+        Méthode de suppression de fournisseur.
+*/
+Route::get('user/fournisseur/delete/{id}', [UsersController::class, 'FournisseurDelete'])->name('User.Fournisseur.Delete');
+
+
+#endregion
+
+#region Historique
+
+/* 
+        Page de la liste des commandes.
+*/
+Route::get('user/historique/list', [UsersController::class, 'Historiques'])->name('User.Historique.List');
+
+/* 
+        Méthode de suppression de commande.
+*/
+Route::get('user/historique/delete/{id}', [UsersController::class, 'HistoriqueDelete'])->name('User.Historique.Delete');
+
+#endregion
+
+#region Commande
+
+/* 
+        Page de la liste des commandes.
+*/
+Route::get('user/commande/list', [UsersController::class, 'Commandes'])->name('User.Commande.List');
+
+/* 
+        Page d'ajout de commande.
+*/
+Route::get('user/commande/add', [UsersController::class, 'CommandeAddPage'])->name('User.Commande.AddPage');
+
+/* 
+        Méthode d'ajout de commande.
+*/
+Route::post('user/commande/add', [UsersController::class, 'CommandeAdd'])->name('User.Commande.Add');
+
+/* 
+        Méthode de modification de commande.
+*/
+Route::post('user/commande/update', [UsersController::class, 'CommandeUpdate'])->name('User.Commande.Update');
+
+/* 
+        Méthode de suppression de commande.
+*/
+Route::get('user/commande/delete/{id}', [UsersController::class, 'CommandeDelete'])->name('User.Commande.Delete');
+
+
+
+
+
 #endregion
 
 #endregion

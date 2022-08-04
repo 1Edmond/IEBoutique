@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/client/css/wave/button.css">
     <link rel="stylesheet" href="/client/css/notification/notification.css">
     <link rel="stylesheet" href="/client/css/chosen/chosen.css">
+    <link rel="stylesheet" href="/nice-select/dist/css/nice-select2.css">
 @endsection
 
 @section('InfoLabel')
@@ -146,6 +147,9 @@
                                         Entrepot
                                     </th>
                                     <th class="text-center">
+                                        Modèle
+                                    </th>
+                                    <th class="text-center">
                                         Quantité
                                     </th>
                                     <th class="text-center">
@@ -162,6 +166,9 @@
                                 </th>
                                 <th class="text-center">
                                     Entrepot
+                                </th>
+                                <th class="text-center">
+                                    Modèle
                                 </th>
                                 <th class="text-center">
                                     Quantité
@@ -193,6 +200,7 @@
     <script src="/client/js/chosen/chosen.jquery.js"></script>
     <script src="/client/js/jasny-bootstrap.min.js"></script>
     <script src="/client/js/notification/bootstrap-growl.min.js"></script>
+    <script src="/nice-select/dist/js/nice-select2.js"></script>
 
     <script>
         $(".chosen").chosen({
@@ -200,14 +208,17 @@
             no_results_text: "Oops, aucune donnée de disponible!",
             width: "95%"
         });
+        var count = 0;
 
         function MakeTableData(data) {
             var tbody = document.getElementById("QuantiteTableBody");
+            count = tbody.rows.length;
             var trElement = document.createElement("tr");
             trElement.setAttribute("name", "element");
             var tdAricle = document.createElement("td");
             var tdRetirer = document.createElement("td");
             var tdEntrepot = document.createElement("td");
+            var tdSelect = document.createElement("td");
             var aRetirer = document.createElement("a");
             //aRetirer.setAttribute("href","");
             aRetirer.setAttribute("class", "btn");
@@ -215,14 +226,36 @@
             var inputQuantite = document.createElement("input");
             inputQuantite.setAttribute("type", "number");
             inputQuantite.setAttribute("min", "1");
-            inputQuantite.setAttribute("value", "1");
             inputQuantite.setAttribute("required", "required");
             inputQuantite.setAttribute("class", "form-control");
-            inputQuantite.setAttribute("id", data + " Entrepot");
             inputQuantite.setAttribute("placeholder", "Séléctionner la quantité");
             var tdQuantite = document.createElement("td");
             tdEntrepot.innerHTML = data;
             tdAricle.innerHTML = document.getElementById("ArticleLibelle").value;
+            inputQuantite.setAttribute("id", "InputForm " + tdAricle.innerHTML + count);
+            // Création du select de modèle
+
+            var select = document.createElement("select");
+            select.setAttribute("id", "ModeleSelect " + tdAricle.innerHTML + count );
+            const allModeles = {!! json_encode($modeles) !!};
+            var div = document.createElement("div");
+            //div.setAttribute("class", "chosen-select fm-cmp-mg");
+            select.addEventListener("change", function() {
+                DisableInputQuantite(select.getAttribute('id'));
+            });
+            allModeles.forEach(element => {
+                var option = document.createElement("option");
+                option.setAttribute("value", element['id']);
+                option.setAttribute("title", element['Quantite']);
+                option.innerHTML = element['Description'];
+                select.appendChild(option);
+            });
+            // NiceSelect.bind(document.getElementById("#a-select"));
+            //select.setAttribute("class", "chosen");
+            div.appendChild(select);
+            tdSelect.appendChild(div);
+
+            // Fin création du select de modèle
             iRetirer.setAttribute("class", "notika-icon notika-sent")
             aRetirer.appendChild(iRetirer);
             tdRetirer.appendChild(aRetirer);
@@ -256,11 +289,21 @@
             trElement.appendChild(tdCacheSeuil);
             trElement.appendChild(tdAricle);
             trElement.appendChild(tdEntrepot);
+            trElement.appendChild(tdSelect);
             trElement.appendChild(tdQuantite);
             trElement.appendChild(tdRetirer);
             tbody.prepend(trElement);
+            NiceSelect.bind(document.getElementById("ModeleSelect " + tdAricle.innerHTML + count));
+
         }
 
+        function DisableInputQuantite(test) {
+            var input = document.getElementById("InputForm " + test.replace("ModeleSelect ", ""));
+            var select = document.getElementById(test);
+            input.setAttribute("value", select.options[select.selectedIndex].title);
+            input.setAttribute('disabled', 'true');
+
+        }
 
         function SupprimerLinge(test) {
             var tbody = document.getElementById("QuantiteTableBody");
@@ -271,6 +314,7 @@
             });
             if (tbody.rows.length == 0)
                 document.getElementById("SecondSection").hidden = true;
+            $(".chosen").trigger("chosen:updated");
         }
 
 
@@ -286,7 +330,7 @@
                     "FormSeuil": tableBody.rows[index].cells[3].innerHTML,
                     "FormArticle": tableBody.rows[index].cells[4].innerHTML,
                     "FormEntrepot": tableBody.rows[index].cells[5].innerHTML,
-                    "FormQuantite": tableBody.rows[index].cells[6].getElementsByTagName('input')[0].value,
+                    "FormQuantite": tableBody.rows[index].cells[7].getElementsByTagName('input')[0].value,
                 }
 
             }
@@ -300,6 +344,8 @@
                 MakeFormInput("FormQuantite", element["FormQuantite"]);
             });
         }
+
+
 
         var myform = document.getElementById("RealForm");
 
@@ -322,6 +368,11 @@
                 document.getElementById("SecondSection").hidden = false;
                 ArticleEntrepot();
                 document.getElementById("FakeForm").reset();
+                $('.chosen').chosen({
+                    disable_search_threshold: 5,
+                    no_results_text: "Oops, aucun modèle disponible !",
+                    width: "95%"
+                });
             }
             e.preventDefault();
         });
@@ -350,7 +401,6 @@
         function ArticleEntrepot() {
             var entrepotsChoisie = document.getElementById("EntrepotChoisie");
             MakeTableData(entrepotsChoisie.options[entrepotsChoisie.selectedIndex].text);
-
         }
         var NavArticles = document.getElementById("ArticleNavHeader");
         var NavArticle = document.getElementById("NavArticles");

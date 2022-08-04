@@ -149,9 +149,10 @@ class AdministrateursController extends Controller
             ->join('avantages', 'tarif_avantage.avantage_id', '=', 'avantages.id')
             ->join('tarifs', 'tarif_avantage.tarif_id', '=', 'tarifs.id')
             ->select('tarifs.*', DB::raw('count(tarif_avantage.id) as nbr'))
-            ->where('tarifs.Etat', '0')
+            ->where('tarifs.Etat', 0)
             ->groupBy('tarifs.id', 'tarifs.DureeTarif', 'tarifs.DateAjout', 'tarifs.Prix', 'tarifs.Libelle', 'tarifs.Description')
             ->paginate(5);
+        //dd($formules);
         return view('admin.pages.Formules.lister', compact('admin', 'formules'));
     }
 

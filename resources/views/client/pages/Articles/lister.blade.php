@@ -94,22 +94,12 @@
                                     @empty
                                         <tr>
                                             <td class="text-center">
-                                                Aucun entrepôt de disponlibel disponible
+                                                Aucun article de disponible
                                             </td>
                                         </tr>
                                     @endforelse
                                 </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th class="text-center text-truncate" style="max-width: 50px;">Libelle</th>
-                                        <th class="text-center text-truncate" style="max-width: 50px;">Description</th>
-                                        <th class="text-center text-truncate" style="max-width: 50px;">Prix</th>
-                                        <th class="text-center text-truncate" style="max-width: 50px;">Date d'ajout</th>
-                                        <th class="text-center text-truncate" style="max-width: 50px;">Catégorie</th>
-                                        <th class="text-center text-truncate" style="max-width: 50px;">Entrepôt</th>
-                                        <th class="text-center text-truncate" style="max-width: 50px;">Action</th>
-                                    </tr>
-                                </tfoot>
+
                             </table>
                             @foreach ($articles as $item)
                                 <div class="modal animated flash" id="supprimermodal{{ $item->id }}" tabindex="-1"
@@ -147,7 +137,7 @@
                                 <div class="modal animated rubberBand" id="detailsmodal{{ $item->id }}"
                                     tabindex="-1" role="dialog" aria-labelledby="detailsmodalLabel"
                                     aria-hidden="true">
-                                    <div class="modal-dialog modal-sm-2" role="document">
+                                    <div class="modal-dialog modal-lg" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title text-center" id="detailsmodalLabel"> Détails sur
@@ -218,6 +208,16 @@
                                                                                 </strong>
                                                                             </li>
                                                                             <li>
+                                                                                Quantité totale de l'article :
+                                                                                <strong>
+                                                                                    @if (array_key_exists($item->id, $ArticleTotal))
+                                                                                        {{ $ArticleTotal[$item->id] }}
+                                                                                    @else
+                                                                                        0
+                                                                                    @endif
+                                                                                </strong>
+                                                                            </li>
+                                                                            <li>
                                                                                 Seuil de l'article :
                                                                                 <strong>
                                                                                     {{ $item->Seuil }}
@@ -284,17 +284,7 @@
                                                                                     @endif
                                                                                 @endforeach
                                                                             </tbody>
-                                                                            <tfoot>
-                                                                                <tr>
-                                                                                    <th class="text-center">Description
-                                                                                    </th>
-                                                                                    <th class="text-center">Addresse</td>
-                                                                                    <th class="text-center">Date d'ajout
-                                                                                    </th>
-                                                                                    <th class="text-center">Nombre
-                                                                                        d'article</th>
-                                                                                </tr>
-                                                                            </tfoot>
+
                                                                         </table>
                                                                     </div>
                                                                 </div>
@@ -381,7 +371,7 @@
                                                             class="form-label">Libelle</label>
                                                         <input type="text" class="form-control" name="Libelle"
                                                             id="Libelle{{ $item->id }}" value="{{ $item->Libelle }}"
-                                                            max="150"
+                                                            max="25"
                                                             aria-describedby="helpLibelle{{ $item->id }}"
                                                             placeholder="Saisissez le libelle de l'article">
                                                         <small id="helpLibelle{{ $item->id }}"
@@ -444,33 +434,6 @@
                                                             class="form-text text-muted">Catégorie Help
                                                             text</small>
                                                     </div>
-                                                    <div class="mb-3 col-lg-6">
-                                                        <label class="form-label">Entrepôt</label>
-                                                        <div class="chosen-select-act fm-cmp-mg">
-                                                            <select class="chosen" multiple name="Entrepot[]"
-                                                                data-placeholder="Séléctionner l'entrepôt...">
-                                                                @foreach ($data as $da => $d)
-                                                                    @if ($da == $item->id)
-                                                                        @foreach ($AllEntrepots as $ent)
-                                                                            @if (in_array($ent->id, $d))
-                                                                                <option value="{{ $ent->Description }}"
-                                                                                    selected>{{ $ent->Description }}
-                                                                                </option>
-                                                                            @else
-                                                                                <option value="{{ $ent->Description }}">
-                                                                                    {{ $ent->Description }}
-                                                                                </option>
-                                                                            @endif
-                                                                        @endforeach
-                                                                    @endif
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                        <small id="helpEntrepot{{ $item->id }}"
-                                                            class="form-text text-muted">Catégorie Help
-                                                            text</small>
-                                                    </div>
-
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="reset" class="btn btn-secondary"

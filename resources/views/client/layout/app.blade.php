@@ -148,7 +148,7 @@
     <script src="/client/js/main.js"></script>
     <!-- tawk chat JS
   ============================================ -->
-    <script src="/client/js/tawk-chat.js"></script>
+    <!--<script src="/client/js/tawk-chat.js"></script>-->
     <script src="/client/js/notification/bootstrap-growl.min.js"></script>
 
     @yield('script')
