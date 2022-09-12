@@ -5,15 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Utilisateur extends Model
+class Approvisionnement extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'Pseudo',
-        'Password',
-        'Role',
-        'id',
+        'DateAppro',
+        'Etat',
+        'Prix',
+        'CommandeId',
         'BoutiqueId',
+        'ModeleId',
     ];
     public $timestamps = false;
 }

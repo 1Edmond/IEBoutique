@@ -12,6 +12,7 @@ class Vente extends Model
         'DateVente',
         'Etat',
         'ClientId',
+        'BoutiqueId',
     ];
     public $timestamps = false;
 }

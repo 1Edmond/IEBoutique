@@ -64,13 +64,7 @@
                                         </tr>
                                     @endforelse
                                 </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th class="text-center">Description</th>
-                                        <th class="text-center">Quantité</th>
-                                        <th class="text-center">Action</th>
-                                    </tr>
-                                </tfoot>
+                             
                             </table>
                             @foreach ($modeles as $item)
                                 <div class="modal animated flash" id="supprimermodal{{ $item->id }}" tabindex="-1"

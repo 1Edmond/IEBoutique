@@ -14,6 +14,7 @@ class BoutiqueHistorique extends Model
         'BoutiqueId',
         'Etat',
         'DateOperation',
+        'CommanditaireId',
     ];
     public $timestamps = false;
 }

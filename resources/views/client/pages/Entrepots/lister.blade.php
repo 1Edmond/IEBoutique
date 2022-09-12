@@ -101,16 +101,7 @@
                                         </tr>
                                     @endforelse
                                 </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th class="text-center">Decsription</th>
-                                        <th class="text-center">Addresse</th>
-                                        <th class="text-center">Date d'ajout</th>
-                                        <th class="text-center">Nombre d'article</th>
-                                        <th class="text-center">Quantité total</th>
-                                        <th class="text-center">Action</th>
-                                    </tr>
-                                </tfoot>
+                               
                             </table>
                             @foreach ($entrepots as $item)
                                 <div class="modal animated flash" id="supprimermodal{{ $item->id }}" tabindex="-1"
@@ -255,16 +246,7 @@
                                                                                 @empty
                                                                                 @endforelse
                                                                             </tbody>
-                                                                            <tfoot>
-                                                                                <tr>
-                                                                                    <th class="text-center">Libelle</th>
-                                                                                    <th class="text-center">Description
-                                                                                    </th>
-                                                                                    <th class="text-center">Prix</th>
-                                                                                    <th class="text-center">Seuil</th>
-                                                                                    <th class="text-center">Quantité</th>
-                                                                                </tr>
-                                                                            </tfoot>
+                                                                           
                                                                         </table>
                                                                     </div>
                                                                 </div>
@@ -317,16 +299,7 @@
                                                                                         {{ $item->Description }}</td>
                                                                                 @endforelse
                                                                             </tbody>
-                                                                            <tfoot>
-                                                                                <tr>
-                                                                                    <th class="text-center">Libelle</th>
-                                                                                    <th class="text-center">Description
-                                                                                    </th>
-                                                                                    <th class="text-center">Prix</th>
-                                                                                    <th class="text-center">Seuil</th>
-                                                                                    <th class="text-center">Quantité</th>
-                                                                                </tr>
-                                                                            </tfoot>
+                                                                          
                                                                         </table>
                                                                     </div>
                                                                 </div>
@@ -427,7 +400,10 @@
             $('#EntrepotDataTable').DataTable({
                 "language": {
                     "url": "/French.json"
-                }
+                },
+                order: [
+                    [2, 'desc']
+                ],
             });
         });
         var EntrepotsNavHeader = document.getElementById("EntrepotsNavHeader");

@@ -26,7 +26,7 @@
                 <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                     <div class="form-example-wrap mg-t-30">
                         <div class="cmp-tb-hd cmp-int-hd">
-                            <h2>Renseignement concernant la vente commande</h2>
+                            <h2>Renseignement concernant la commande</h2>
                         </div>
                         <form action="" id="FakeForm" method="post">
                             <div class="form-example-int form-horizental">
@@ -37,7 +37,7 @@
                                         </div>
                                         <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">
                                             <div class="chosen-select-act fm-cmp-mg">
-                                                <select class="chosen" id="ArticleSelect" required
+                                                <select class="chosen" id="ArticleSelect" required 
                                                     data-placeholder="Séléctionnez l'article">
                                                     <option disabled selected>Séléctionnez l'article</option>
                                                     @forelse ($articles as $item)
@@ -114,7 +114,7 @@
                                         <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">
                                             <div class="chosen-select-act fm-cmp-mg">
                                                 <select class="chosen" name="Modele" id="ModeleSelect">
-                                                    <option disabled selected>Séléctionnez le modèle</option>
+                                                    <option value="0" selected>Pas de modèle</option>
                                                     @forelse ($modeles as $item)
                                                         <option title="{{ $item->Quantite }}" value="{{ $item->id }}">
                                                             {{ $item->Description }}
@@ -210,13 +210,17 @@
             no_results_text: "Oops, aucun modèle disponible !",
             width: "95%"
         });
-        var myform = document.getElementById("RealFormPanier");
-        var tbody = document.getElementById("TableTbody");
-        var articleChoisi = document.getElementById("ArticleSelect");
-        var fournisseurChoisi = document.getElementById("FournisseurSelect");
-        var modeleChoisi = document.getElementById("ModeleSelect");
-        var entrepotChoisi = document.getElementById("EntrepotSelect");
-        var CommandeInfoDiv = document.getElementById('CommandeInfoDiv');
+        try {
+            var myform = document.getElementById("RealFormPanier");
+            var tbody = document.getElementById("TableTbody");
+            var articleChoisi = document.getElementById("ArticleSelect");
+            var fournisseurChoisi = document.getElementById("FournisseurSelect");
+            var modeleChoisi = document.getElementById("ModeleSelect");
+            var entrepotChoisi = document.getElementById("EntrepotSelect");
+            var CommandeInfoDiv = document.getElementById('CommandeInfoDiv');
+        } catch (error) {
+
+        }
 
 
         function MakeCommandeTableData() {
@@ -274,6 +278,7 @@
             tr.appendChild(tdEntrepot);
             tr.appendChild(tdRetirer);
             tbody.appendChild(tr);
+
         }
 
         function SupprimerLigne(test) {
@@ -351,6 +356,7 @@
             var Newtbody = document.createElement("tbody");
             Newtbody.setAttribute("id", "TableTbody");
             Oldtbody.replaceWith(Newtbody);
+            tbody = Newtbody;
             $.growl('Annulation de la demande.', {
                 type: 'success',
                 delay: 5000,

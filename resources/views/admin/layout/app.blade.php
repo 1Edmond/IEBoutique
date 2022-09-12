@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="/admin/vendors/flag-icon-css/css/flag-icon.min.css">
     <link rel="stylesheet" href="/admin/vendors/selectFX/css/cs-skin-elastic.css">
     <link rel="stylesheet" href="/admin/vendors/jqvmap/dist/jqvmap.min.css">
+    <link rel="stylesheet" href="/client/css/jquery.dataTables.min.css">
 
 
     <link rel="stylesheet" href="/admin/assets/css/style.css">
@@ -62,15 +63,10 @@
     <script src="/admin/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
     <script src="/admin/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
     <script src="/admin/vendors/chosen/chosen.jquery.min.js"></script>
-    <script src="//cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-    <script >
-      $(document).ready( function () {
-        $('#historiquesTable').DataTable();
-      });
-      </script>
+
     @yield('script')
 
-    
+
 </body>
 
 </html>

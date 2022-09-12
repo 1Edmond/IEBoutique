@@ -34,15 +34,16 @@
                                 particulier ou également trier la liste des articles obtenues.</p>
                         </div>
                         <div class="table bsc-tbl-cds">
-                            <table id="ArticleDataTable" class="table-striped wrap table-hover">
+                            <table id="ArticleDataTable" class="table table-striped wrap table-hover">
                                 <thead>
                                     <tr>
                                         <th class="text-center text-truncate" style="max-width: 50px;">Libelle</th>
                                         <th class="text-center text-truncate" style="max-width: 50px;">Description</th>
-                                        <th class="text-center text-truncate" style="max-width: 50px;">Prix</th>
                                         <th class="text-center text-truncate" style="max-width: 50px;">Date d'ajout</th>
-                                        <th class="text-center text-truncate" style="max-width: 50px;">Catégorie</th>
-                                        <th class="text-center text-truncate" style="max-width: 50px;">Entrepôt</th>
+                                        <th class="text-center text-truncate" style="max-width: 50px;">Seuil</th>
+                                        <th class="text-center text-truncate" style="max-width: 50px;">Quantité disponible
+                                        </th>
+                                        {{-- <th class="text-center text-truncate" style="max-width: 50px;">Entrepôt</th> --}}
                                         <th class="text-center text-truncate" style="max-width: 50px;">Action</th>
                                     </tr>
                                 </thead>
@@ -62,16 +63,20 @@
                                                 @endif
                                             @endforeach
                                         </div>
-                                        <tr>
+                                        <tr @if ($ArticleTotal[$item->id] <= $item->Seuil) class="danger" @endif>
                                             <th class="text-center" scope="row">
                                                 {{ $item->Libelle }}</th>
-                                            <td class="text-center">{{ $item->Description }}</td>
-                                            <td class="text-center">{{ $item->Prix }} fcfa</td>
-                                            <td class="text-center">{{ $item->DateAjout }}</td>
-                                            <td class="text-center">{{ $item->Categorie }}</td>
-                                            <td class="text-center">
+                                            <td class="text-center text-truncate" style="max-width: 50px;">
+                                                {{ $item->Description }}</td>
+                                            <td class="text-center text-truncate" style="max-width: 50px;">
+                                                {{ $item->DateAjout }}</td>
+                                            <td class="text-center text-truncate" style="max-width: 50px;">
+                                                {{ $item->Seuil }} </td>
+                                            <td class="text-center text-truncate" style="max-width: 50px;">
+                                                {{ $ArticleTotal[$item->id] }}</td>
+                                            {{-- <td class="text-center text-truncate" style="max-width: 50px;">
                                                 {{ $articleEntrepot }}
-                                            </td>
+                                            </td> --}}
                                             <td class="text-center button-icon-btn  button-icon-btn-cl sm-res-mg-t-30">
                                                 <button class="btn btn-danger danger-icon-notika btn-reco-mg btn-button-mg"
                                                     data-toggle="modal" data-target="#supprimermodal{{ $item->id }}"
@@ -93,7 +98,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td class="text-center">
+                                            <td class="text-center" colspan="6">
                                                 Aucun article de disponible
                                             </td>
                                         </tr>
@@ -107,8 +112,7 @@
                                     <div class="modal-dialog modal-sm-2" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title text-center" id="supprimermodalLabel">Confirmez la
-                                                    suppression</h5>
+                                                <h5 class="modal-title text-center" id="supprimermodalLabel">Détails sur la commande de  {{$item->Article}}</h5>
                                                 <button type="button" class="close" data-dismiss="modal"
                                                     aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
@@ -147,6 +151,17 @@
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
+                                            @if ($ArticleTotal[$item->id] <= $item->Seuil)
+                                                <br><br>
+                                                <p class="text-center text-danger">
+                                                    <strong>
+                                                        <i>
+                                                            L'article {{ $item->Libelle }} est en dessous du seuil,
+                                                            veuillez faire une commande de réapprovisionnement.
+                                                        </i>
+                                                    </strong>
+                                                </p>
+                                            @endif
                                             <div class="modal-body">
                                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-24">
                                                     <div class="accordion-stn sm-res-mg-t-30">
@@ -473,6 +488,9 @@
                 "language": {
                     "url": "/French.json"
                 },
+                order: [
+                    [4, 'asc']
+                ],
 
             });
 
@@ -489,13 +507,14 @@
         <script>
             $('#ArticleEntrepotTable{{ $item->id }}').DataTable({
                 scrollY: '60px',
-                select: true,
-                stateSave: true,
                 scrollCollapse: true,
                 paging: true,
                 "language": {
                     "url": "/French.json"
                 },
+                order: [
+                    [2, 'desc']
+                ],
             });
         </script>
     @endforeach

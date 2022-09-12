@@ -7,7 +7,7 @@
                                 class="notika-icon notika-house"></i>
                             Abonnement</a>
                     </li>
-                    <li id="ApprovisonnementNavHeader"><a data-toggle="tab" href="#NavApprovisionnement"><i
+                    <li id="ApprovisonnementNavHeader"><a data-toggle="tab" href="#NavApprovisionnements"><i
                                 class="notika-icon notika-mail"></i>
                             Approvisonnement</a>
                     </li>
@@ -29,90 +29,80 @@
                                 class="notika-icon notika-app"></i>
                             Fournisseurs</a>
                     </li>
-                    <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
-                        <li id="ModelsNavHeader"><a data-toggle="tab" href="#NavModels"><i
-                                    class="notika-icon notika-support"></i> Modèles</a>
-                        </li>
-                        <li id="VentesNavHeader"><a data-toggle="tab" href="#NavVentes"><i
-                                    class="notika-icon notika-support"></i> Ventes</a>
-                        </li>
-                        <li id="ClientNavHeader"><a data-toggle="tab" href="#NavClient"><i
-                                    class="notika-icon notika-support"></i> Client</a>
-                        </li>
-                    </ul>
-                    <div class="tab-content custom-menu-content">
-                        <div id="NavAbonnement" class="tab-pane in notika-tab-menu-bg animated flipInX">
-                            <ul class="notika-main-menu-dropdown">
-                                <li><a href="{{ route('User.Abonnement.List') }}">Voir mes abonnements</a>
-                                </li>
-                                @if ($user->Role == 'Gérant')
-                                    <li><a href="{{ route('User.Abonnement.AddPage') }}">Faire un abonnement</a>
-                                    </li>
-                                @endif
-                            </ul>
-                        </div>
-                        <div id="NavApprovisionnement" class="tab-pane notika-tab-menu-bg animated flipInX">
-                            <ul class="notika-main-menu-dropdown">
-                                <li><a href="">Lister les approvisonnements</a>
-                                </li>
-                                <li><a href="">Faire une demande d'approvisonnement</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div id="NavArticles" class="tab-pane notika-tab-menu-bg animated flipInX">
-                            <ul class="notika-main-menu-dropdown">
-                                <li><a href="{{ route('User.Article.List') }}">Lister les articles</a></li>
-                                <li><a href="{{ route('User.Article.AddPage') }}">Ajouter un article</a></li>
-                            </ul>
-                        </div>
-                        <div id="NavCategories" class="tab-pane notika-tab-menu-bg animated flipInX">
-                            <ul class="notika-main-menu-dropdown">
-                                <li><a href="{{ route('User.Categorie.List') }}">Lister les catégories</a></li>
-                                <li><a href="{{ route('User.Categorie.AddPage') }}">Ajouter une catégorie</a></li>
-                            </ul>
-                        </div>
-                        <div id="NavCommandes" class="tab-pane notika-tab-menu-bg animated flipInX">
-                            <ul class="notika-main-menu-dropdown">
-                                <li><a href="{{ route('User.Commande.List') }}">Voir toutes les commandes</a></li>
-                                <li><a href="{{ route('User.Commande.AddPage') }}">Faire une demande</a></li>
-                            </ul>
-                        </div>
-                        <div id="NavEntrepots" class="tab-pane notika-tab-menu-bg animated flipInX">
-                            <ul class="notika-main-menu-dropdown">
-                                <li><a href="{{ route('User.Entrepot.List') }}">Voir tous les entrepôts</a></li>
-                                <li><a href="{{ route('User.Entrepot.AddPage') }}">Ajouter un entrepôt</a></li>
-                                <li>
-                                    <a href="{{ route('User.Entrepot.Approvisionnement') }}">
-                                        Approvisionnement entre entrepôt
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div id="NavFournisseurs" class="tab-pane notika-tab-menu-bg animated flipInX">
-                            <ul class="notika-main-menu-dropdown">
-                                <li><a href="{{ route('User.Fournisseur.List') }}">Lister vos fournisseurs</a></li>
-                                <li><a href="{{ route('User.Fournisseur.AddPage') }}">Ajouter un fournisseur</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div id="NavModels" class="tab-pane notika-tab-menu-bg animated flipInX">
-                            <ul class="notika-main-menu-dropdown">
-                                <li><a href="{{ route('User.Modele.List') }}">Voir les modèles disponible</a></li>
-                                <li><a href="{{ route('User.Modele.AddPage') }}">Ajouter un modèle</a></li>
-                            </ul>
-                        </div>
-                        <div id="NavVentes" class="tab-pane notika-tab-menu-bg animated flipInX">
-                            <ul class="notika-main-menu-dropdown">
-                                <li><a href="{{ route('User.Vente.List') }}">Voir toutes les ventes</a></li>
-                                <li><a href="{{ route('User.Vente.AddPage') }}">Faire une vente</a></li>
-                            </ul>
-                        </div>
-                        <div id="NavClients" class="tab-pane notika-tab-menu-bg animated flipInX">
-                            <ul class="notika-main-menu-dropdown">
-                                <li><a href="{{ route('User.Vente.List') }}">Voir mes clients</a></li>
-                            </ul>
-                        </div>
+                    <li id="ModelsNavHeader"><a data-toggle="tab" href="#NavModels"><i class="fa fa-archive"></i>
+                            Modèles</a>
+                    </li>
+                    <li id="VentesNavHeader"><a data-toggle="tab" href="#NavVentes"><i class="fa fa-money"></i>
+                            Ventes</a>
+                    </li>
+
+                </ul>
+                <div class="tab-content custom-menu-content">
+                    <div id="NavAbonnement" class="tab-pane in notika-tab-menu-bg animated flipInX">
+                        <ul class="notika-main-menu-dropdown">
+                            <li><a href="{{ route('User.Abonnement.List') }}">Voir mes abonnements</a>
+                            </li>
+                            <li><a href="{{ route('User.Abonnement.AddPage') }}">Faire un abonnement</a>
+                            </li>
+                        </ul>
                     </div>
+                    <div id="NavApprovisionnements" class="tab-pane notika-tab-menu-bg animated flipInX">
+                        <ul class="notika-main-menu-dropdown">
+                            <li><a href="{{ route('User.Approvisionnement.List') }}">Lister les approvisonnements</a>
+                            </li>
+                            <li><a href="{{ route('User.Approvisionnement.AddPage') }}">Ajouter un approvisonnement</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="NavArticles" class="tab-pane notika-tab-menu-bg animated flipInX">
+                        <ul class="notika-main-menu-dropdown">
+                            <li><a href="{{ route('User.Article.List') }}">Lister les articles</a></li>
+                            <li><a href="{{ route('User.Article.AddPage') }}">Ajouter un article</a></li>
+                        </ul>
+                    </div>
+                    <div id="NavCategories" class="tab-pane notika-tab-menu-bg animated flipInX">
+                        <ul class="notika-main-menu-dropdown">
+                            <li><a href="{{ route('User.Categorie.List') }}">Lister les catégories</a></li>
+                            <li><a href="{{ route('User.Categorie.AddPage') }}">Ajouter une catégorie</a></li>
+                        </ul>
+                    </div>
+                    <div id="NavCommandes" class="tab-pane notika-tab-menu-bg animated flipInX">
+                        <ul class="notika-main-menu-dropdown">
+                            <li><a href="{{ route('User.Commande.List') }}">Voir toutes les commandes</a></li>
+                            <li><a href="{{ route('User.Commande.AddPage') }}">Faire une demande</a></li>
+                        </ul>
+                    </div>
+                    <div id="NavEntrepots" class="tab-pane notika-tab-menu-bg animated flipInX">
+                        <ul class="notika-main-menu-dropdown">
+                            <li><a href="{{ route('User.Entrepot.List') }}">Voir tous les entrepôts</a></li>
+                            <li><a href="{{ route('User.Entrepot.AddPage') }}">Ajouter un entrepôt</a></li>
+                            <li class="hidden">
+                                <a href="{{ route('User.Entrepot.Approvisionnement') }}">
+                                    Approvisionnement entre entrepôt
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="NavFournisseurs" class="tab-pane notika-tab-menu-bg animated flipInX">
+                        <ul class="notika-main-menu-dropdown">
+                            <li><a href="{{ route('User.Fournisseur.List') }}">Lister vos fournisseurs</a></li>
+                            <li><a href="{{ route('User.Fournisseur.AddPage') }}">Ajouter un fournisseur</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="NavModels" class="tab-pane notika-tab-menu-bg animated flipInX">
+                        <ul class="notika-main-menu-dropdown">
+                            <li><a href="{{ route('User.Modele.List') }}">Voir les modèles disponible</a></li>
+                            <li><a href="{{ route('User.Modele.AddPage') }}">Ajouter un modèle</a></li>
+                        </ul>
+                    </div>
+                    <div id="NavVentes" class="tab-pane notika-tab-menu-bg animated flipInX">
+                        <ul class="notika-main-menu-dropdown">
+                            <li><a href="{{ route('User.Vente.List') }}">Voir toutes les ventes</a></li>
+                            <li><a href="{{ route('User.Vente.AddPage') }}">Faire une vente</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

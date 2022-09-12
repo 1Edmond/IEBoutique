@@ -76,23 +76,13 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td class="text-center">
+                                            <td class="text-center" colspan="7">
                                                 Aucun fournisseur n'est disponible
                                             </td>
                                         </tr>
                                     @endforelse
                                 </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th class="text-center">Nom</th>
-                                        <th class="text-center">Prénom</th>
-                                        <th class="text-center">Adresse</th>
-                                        <th class="text-center">Contact</th>
-                                        <th class="text-center">Email</th>
-                                        <th class="text-center">Site web</th>
-                                        <th class="text-center">Action</th>
-                                    </tr>
-                                </tfoot>
+                               
                             </table>
                             @foreach ($fournisseurs as $item)
                                 <div class="modal animated flash" id="supprimermodal{{ $item->id }}" tabindex="-1"

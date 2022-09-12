@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Abonnement;
+use App\Models\Approvisionnement;
 use App\Models\Article;
 use App\Models\Avantage;
 use App\Models\Boutique;
 use App\Models\BoutiqueHistorique;
 use App\Models\Categorie;
 use App\Models\Client;
+use App\Models\Commande;
 use App\Models\Entrepot;
 use App\Models\Fournisseur;
 use App\Models\Modele;
@@ -16,16 +18,32 @@ use App\Models\Personne;
 use App\Models\Tarif;
 use App\Models\Utilisateur;
 use App\Models\Vente;
-use GuzzleHttp\Promise\Create;
-use Illuminate\Database\Eloquent\Model;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use PhpParser\Node\Stmt\Foreach_;
 
 class UsersController extends Controller
 {
+    private static $Informations = [];
+
+    public static function GetInformations()
+    {
+
+        $user = Utilisateur::find(session()->get('logged'));
+        $data = [];
+        $articleInfo =
+            Article::join('article_entrepot', 'articles.id', '=', 'article_entrepot.ArticleId')
+            ->join('entrepots', 'entrepots.id', '=', 'article_entrepot.EntrepotId')
+            ->where('articles.Etat', 0)
+            ->where('entrepots.BoutiqueId', $user->BoutiqueId)
+            ->where('article_entrepot.Quantite', '<=', 'article_entrepot.Seuil')
+            ->count();
+        return $data;
+    }
     public function Index()
     {
+        UsersController::$Informations = UsersController::GetInformations();
         $user = Utilisateur::find(session()->get('logged'));
         if (Entrepot::where('Etat', 0)->where('Description', 'Local')->where("BoutiqueId", $user->BoutiqueId)->count() == 0)
             Entrepot::create([
@@ -39,6 +57,7 @@ class UsersController extends Controller
         if (Entrepot::where('Etat', 1)->where('Description', 'Local')->where("BoutiqueId", $user->BoutiqueId)->count() == 0)
             Entrepot::where('Etat', 0)->where('Description', 'Local')
                 ->update(['Etat' => 0]);
+
         return view('client.pages.dashboard', compact('user'));
     }
     #region Abonnement
@@ -69,14 +88,6 @@ class UsersController extends Controller
     public function Abonnements()
     {
         $user = Utilisateur::find(session()->get('logged'));
-        $tempId = $user->id;
-        if ($user->Role != "Gérant") {
-            $tempId = Utilisateur::join('personnes', 'personnes.id', '=', 'utilisateurs.id')
-                ->where('BoutiqueId', $user->BoutiqueId)
-                ->where('personnes.Etat', 0)
-                ->where('utilisateurs.Role', 'Gérant')
-                ->first()->id;
-        }
         $abonnements = Abonnement::join('tarifs', 'tarifs.id', '=', 'abonnements.Tarif_id')
             ->join('personnes', 'abonnements.User_Id', '=', 'personnes.id')
             ->join('boutiques', 'boutiques.id', '=', 'personnes.id')
@@ -84,9 +95,9 @@ class UsersController extends Controller
             ->where('boutiques.Etat', '<>', '1')
             ->where('personnes.Etat', '<>', '1')
             ->where('tarifs.Etat', '<>', '1')
-            ->where('abonnements.User_id', $tempId)
+            ->where('abonnements.User_id', $user->id)
             ->select('abonnements.*', 'tarifs.Libelle as Tarif', 'personnes.Nom', 'personnes.Prenom', 'boutiques.Nom as Boutique')
-            ->orderby('DateAbonnement', 'desc')->get();
+            ->orderByDesc('DateAbonnement')->get();
         return view('client.pages.Abonnements.lister', compact('user', 'abonnements'));
     }
     #endregion
@@ -104,7 +115,9 @@ class UsersController extends Controller
     public function Categories()
     {
         $user = Utilisateur::find(session()->get('logged'));
-        $categories = Categorie::where('Etat', 0)->get();
+        $categories = Categorie::where('Etat', 0)
+            ->orderByDesc('DateAjout')
+            ->get();
         return view('client.pages.Categories.lister', compact('user', 'categories'));
     }
 
@@ -130,6 +143,10 @@ class UsersController extends Controller
         ]);
         $message = array();
         $message[2000] = 'Ajout réussi de la catégorie ' . $request->input('Libelle') . ' réussie';
+        AdministrateursController::CreateHistorique(
+            "Ajout de catégorie",
+            "La catégorie " . $request->input("Libelle") . " a été ajoutée."
+        );
         return redirect()->route('User.Categorie.AddPage')
             ->with('Success', $message);
     }
@@ -141,7 +158,10 @@ class UsersController extends Controller
     public function Entrepots()
     {
         $user = Utilisateur::find(session()->get('logged'));
-        $entrepots = Entrepot::where('Etat', 0)->where('BoutiqueId', $user->BoutiqueId)->get();
+        $entrepots = Entrepot::where('Etat', 0)
+            ->where('BoutiqueId', $user->BoutiqueId)
+            ->orderByDesc('DateAjout')
+            ->get();
         $entrepotsQte = DB::table('article_entrepot')
             ->join('entrepots', 'entrepots.id', '=', 'article_entrepot.EntrepotId')
             ->select('EntrepotId', DB::raw('sum(quantite) as total'))
@@ -215,13 +235,17 @@ class UsersController extends Controller
         ]);
         $message = array();
         $message[2000] = "Ajout de l'entrepôt " . $request->input('Description') . " réussie.";
+        $this->AddHistorique(
+            "Ajout d'entrepôt",
+            "L'entrepôt " . $request->input('Description') . " a été ajouté.",
+            $user->BoutiqueId
+        );
         return redirect()->route('User.Entrepot.AddPage')->with('Success', $message);
     }
 
     public function EntrepotUpdate(Request $request)
     {
         $user = Utilisateur::find(session()->get('logged'));
-
         $this->validate($request, [
             'Description' => ['required'],
             'Adresse' => ['required'],
@@ -245,6 +269,11 @@ class UsersController extends Controller
         }
         if (count($modif) != 0) {
             $entrepot->update();
+            $this->AddHistorique(
+                "Mise à jour d'un entrepôt",
+                "Les informations de l'entrepôt " . $oldDescription . " ont été modifiées.",
+                $user->BoutiqueId
+            );
             return redirect()->route('User.Entrepot.List')->with('Success', $modif);
         } else
             return redirect()->route('User.Entrepot.List');
@@ -254,6 +283,11 @@ class UsersController extends Controller
     {
         $entrepot = Entrepot::find($id);
         $entrepot->Etat = 1;
+        $this->AddHistorique(
+            "Suppression d'un entrepôt",
+            "L'entrepôt " . $entrepot->Description . " a été supprimé.",
+
+        );
         $entrepot->update();
         $modif = array();
         $modif[2000] = 'Suppression de ' . $entrepot->Description . ' réussie.';
@@ -263,6 +297,7 @@ class UsersController extends Controller
     #endregion
 
     #region Vente
+
     public function VentePage()
     {
         $user = Utilisateur::find(session()->get('logged'));
@@ -301,12 +336,67 @@ class UsersController extends Controller
         return view('client.pages.Ventes.ajouter', compact('user', 'articles', 'entrepots', 'data', 'ArticleData', 'clients'));
     }
 
+    public function VentePrint($id)
+    {
+        $vente = Vente::join('article_ventes', 'article_ventes.VenteId', '=', 'ventes.id')
+            ->join('articles', 'articles.id', '=', 'article_ventes.ArticleId')
+            ->join('boutiques', 'boutiques.id', '=', 'ventes.BoutiqueId')
+            ->where('article_ventes.Etat', 0)
+            ->where('ventes.id', $id)
+            ->select('ventes.ClientId', 'ventes.DateVente', 'Nom', 'Site', 'Adresse', 'Email', DB::raw('sum(PrixVente) as PrixTotal'), DB::raw('sum(article_ventes.Reduction) / count(article_ventes.Reduction) as Reduction '), DB::raw('sum(article_ventes.Quantite) as Quantite'), 'ventes.id as id')
+            ->groupBy('ClientId', 'DateVente', 'Nom', 'Site', 'Adresse', 'Email', 'id')
+            ->first();
+        $boutique = Boutique::find(Utilisateur::find(session()->get('logged'))->BoutiqueId);
+        $venteArticle = DB::table('article_ventes')
+            ->where('Etat', 0)
+            ->where('VenteId', $id)
+            ->get();
+        $articles = Article::join('categories', 'categories.id', '=', 'articles.CategorieId')
+            ->join('article_entrepot', 'articles.id', '=', 'article_entrepot.ArticleId')
+            ->join('entrepots', 'entrepots.id', '=', 'article_entrepot.EntrepotId')
+            ->select('articles.*', 'categories.Libelle as Categorie')
+            ->where('articles.Etat', 0)
+            ->where('entrepots.BoutiqueId', $boutique->id)
+            ->groupBy('articles.Libelle', 'articles.Description', 'articles.DateAjout', 'articles.Seuil', 'articles.Prix', 'articles.id', 'articles.Etat', 'Categorie')
+            ->get();
+        $info  = [];
+        $count = 0;
+        foreach ($venteArticle as $item) {
+            foreach ($articles as $art) {
+                if ($art->id == $item->ArticleId) {
+                    $info[$count]['article'] = $art->Libelle;
+                    $info[$count]['categorie'] = $art->Categorie;
+                    $info[$count]['quantite'] = $item->Quantite;
+                    $info[$count]['Prix'] = $art->Prix;
+                    $info[$count]['Reduction'] = $item->Reduction;
+                    $info[$count]['Total'] = $this->CalculePrix($art->Prix, $item->Reduction);
+                    $count += 1;
+                }
+            }
+        }
+        $this->AddHistorique(
+            "Impression d'une vente",
+            "La vente " . $id . " a été imprimée.",
+        );
+        $personnes = Personne::where('Etat', 0)->get();
+        $pdf = Pdf::loadView(
+            'client.pages.Pdf.vente',
+            compact('vente', 'boutique', 'personnes', 'info')
+        )->setPaper('a5', 'landscape');
+        return $pdf->download('reçu ' . $id . '.pdf');
+    }
+
 
     public function VenteDelete($id)
     {
-        Vente::find($id)->update([
+        $vente =  Vente::find($id)->update([
             'Etat' => 1
         ]);
+        $this->AddHistorique(
+            "Suppression d'une vente",
+            "La vente " . Vente::find($id)->DateVente . " a été supprimé.",
+
+        );
         return back()->with('Success', [2000 => 'Suppression de la vente réussie.']);
     }
 
@@ -379,6 +469,7 @@ class UsersController extends Controller
             "DateVente" => now(),
             "Etat" => 0,
             "ClientId" => $clientId,
+            "BoutiqueId" => $user->BoutiqueId,
 
         ]);
         if (is_array($articles)) { // Partie des paniers
@@ -391,6 +482,23 @@ class UsersController extends Controller
                     $vente->id,
                     $this->CalculePrix(Article::find($articles[$i])->Prix, $reductions[$i])
                 ]);
+                // Retrait des quantités
+                $oldQuantite = DB::table('entrepots')
+                    ->join('article_entrepot', 'article_entrepot.EntrepotId', '=', 'entrepots.id')
+                    ->where('article_entrepot.Etat', 0)
+                    ->where('article_entrepot.ArticleId', $articles[$i])
+                    ->where('entrepots.Description', 'Local')
+                    ->first()
+                    ->Quantite;
+                DB::table('entrepots')
+                    ->join('article_entrepot', 'article_entrepot.EntrepotId', '=', 'entrepots.id')
+                    ->where('article_entrepot.Etat', 0)
+                    ->where('article_entrepot.ArticleId', $articles[$i])
+                    ->where('entrepots.Description', 'Local')
+                    ->update([
+                        "Quantite" => $oldQuantite - $quantites[$i]
+                    ]);
+                // Fin retrait des quantités
             }
         } // Fin partie des paniers
         else { // Partie Simple vente
@@ -401,8 +509,22 @@ class UsersController extends Controller
                 $articles,
                 $vente->id,
                 $this->CalculePrix(Article::find($articles)->Prix, $reductions)
-
             ]);
+            $oldQuantite = DB::table('entrepots')
+                ->join('article_entrepot', 'article_entrepot.EntrepotId', '=', 'entrepots.id')
+                ->where('article_entrepot.Etat', 0)
+                ->where('article_entrepot.ArticleId', $articles)
+                ->where('entrepots.Description', 'Local')
+                ->first()
+                ->Quantite;
+            DB::table('entrepots')
+                ->join('article_entrepot', 'article_entrepot.EntrepotId', '=', 'entrepots.id')
+                ->where('article_entrepot.Etat', 0)
+                ->where('article_entrepot.ArticleId', $articles)
+                ->where('entrepots.Description', 'Local')
+                ->update([
+                    "Quantite" => $oldQuantite - $quantites
+                ]);
         } // Fin Partie Simple Vente
         if (is_array($articles))
             $message[$count] = "Vente effectuée avec succès, nombre d'articles vendus " . count($articles) . ".";
@@ -410,12 +532,12 @@ class UsersController extends Controller
             $message[$count] = "Vente effectuée avec succès, nombre d'articles vendus 1.";
         // Fin de la partie de la vente
 
-        // Partie retrait des quantités dans les entrepôts
-
-        // Fin de la partie retrait des quantités dans les entrepôts
 
 
-
+        $this->AddHistorique(
+            "Vente d'articles",
+            "L'utilisateur " . Utilisateur::find(session()->get('logged'))->Pseudo . " a effectué une vente.",
+        );
         return back()->with('Success', $message);
     }
 
@@ -459,15 +581,18 @@ class UsersController extends Controller
             ->where('articles.Etat', 0)
             ->where('article_ventes.Etat', 0)
             ->where('ventes.Etat', 0)
+            ->where('ventes.BoutiqueId', $user->BoutiqueId)
             ->select(
                 'ventes.DateVente',
                 'ventes.id',
                 'ventes.ClientId',
                 DB::raw('count(article_ventes.id) as NbrVente'),
                 DB::raw('sum(article_ventes.Quantite) as TotalVente'),
+                DB::raw('(sum(article_ventes.Reduction) / count(article_ventes.Reduction)) as TotalReduction'),
                 DB::raw('sum(article_ventes.PrixVente) as PrixTotalVente'),
             )
             ->groupBy('ventes.DateVente', 'ventes.id')
+            ->orderByDesc('DateVente')
             ->get();
         $articles = Article::where('Etat', 0)->get();
         $ventesInfo = DB::table('article_ventes')
@@ -487,6 +612,22 @@ class UsersController extends Controller
 
     #endregion
 
+    #region Déconnexion
+
+    public function LogOut()
+    {
+        if (session()->has('logged')) {
+            $this->AddHistorique(
+                "Déconnexion",
+                "Déconnexion de l'utilisateur " . Utilisateur::find(session()->get('logged'))->Pseudo . ".",
+
+            );
+            return redirect()->route('Index');
+        }
+    }
+
+    #endregion
+
     #region Article
     public function Articles()
     {
@@ -498,6 +639,7 @@ class UsersController extends Controller
             ->where('articles.Etat', 0)
             ->where('entrepots.BoutiqueId', $user->BoutiqueId)
             ->groupBy('articles.Libelle', 'articles.Description', 'articles.DateAjout', 'articles.Seuil', 'articles.Prix', 'articles.id', 'articles.Etat', 'Categorie')
+            ->orderByDesc('articles.DateAjout')
             ->get();
         $categories = Categorie::where('Etat', 0)->get();
         $AllEntrepots = Entrepot::where('Etat', 0)->where('BoutiqueId', $user->BoutiqueId)->get();
@@ -617,6 +759,11 @@ class UsersController extends Controller
             }
             $count += 2000;
         }
+        $this->AddHistorique(
+            "Ajout d'article",
+            "L'utilisateur " . Utilisateur::find(session()->get('logged'))->Pseudo . " a ajouté des articles.",
+
+        );
 
         return back()->with('Success', $message);
     }
@@ -626,8 +773,16 @@ class UsersController extends Controller
         $article = Article::find($id);
         $message = array();
         $message[2000] =  "Suppression de l'article " . $article->Libelle . " réussie.";
-        if ($user->Role == "Gérant")
+        if ($user->Role == "Gérant") {
+            $this->AddHistorique(
+                "Suppression d'un article",
+                "L'article " . $article->Libelle . " a été supprimé.",
+
+            );
+            $article->Etat = 1;
+            $article->update();
             return redirect()->route('User.Article.List')->with('Success', $message);
+        }
         return redirect()->back()->with('fail', "Suppression de l'article " . $article->Libelle . " impossible, vous n'avez pas ce droit.");
     }
     public function ArticleUpdate(Request $request)
@@ -639,7 +794,6 @@ class UsersController extends Controller
             'Prix' => ['required'],
             'Seuil' => ['required'],
             'Categorie' => ['required'],
-            'Entrepot' => ['required'],
         ]);
         $article = Article::find($request->input('Id'));
         $modif = array();
@@ -675,7 +829,13 @@ class UsersController extends Controller
             $article->CategorieId = Categorie::where('Libelle', $request->input('Categorie'))
                 ->where('Etat', 0)->first()->id;
         }
+        if (count($modif) > 0) {
+            $this->AddHistorique(
+                "Mise à jour d'un article",
+                "L'article " . $article->Libelle . " a été mise à jour.",
 
+            );
+        }
         return redirect()->route('User.Article.List')->with('Success', $modif);
     }
 
@@ -696,6 +856,11 @@ class UsersController extends Controller
         $message = array();
         $message[2000] = "Suppression du modèle " . $modele->Description . " réussie.";
         $modele->save();
+        $this->AddHistorique(
+            "Suppression d'un modèle d'article",
+            "Le modèle " . $modele->Description . " a été supprimé.",
+
+        );
         return back()->with('Success', $message);
     }
     public function Modeles()
@@ -703,6 +868,7 @@ class UsersController extends Controller
         $user = Utilisateur::find(session()->get('logged'));
         $modeles = Modele::where('Etat', 0)
             ->where('BoutiqueId', $user->BoutiqueId)
+            ->orderByDesc('DateAjout')
             ->get();
         return view('client.pages.Modeles.lister', compact('user', 'modeles'));
     }
@@ -721,6 +887,11 @@ class UsersController extends Controller
             'DateAjout' => now(),
         ]);
         $message = array();
+        $this->AddHistorique(
+            "Ajout d'un modèle",
+            "Le modèle " . $request->input('Description') . " a été ajouté.",
+
+        );
         $message[2000] = "Ajout du modèle " . $request->input('Description') . " réussie.";
         return back()->with('Success', $message);
     }
@@ -747,6 +918,11 @@ class UsersController extends Controller
         }
         if (count($message) > 0) {
             $modele->save();
+            $this->AddHistorique(
+                "Mise à jour de modèle",
+                "Les informations du modèle " . $modele->Description . " ont été mise à jour.",
+
+            );
             return back()->with('Success', $message);
         } else
             return back();
@@ -794,6 +970,11 @@ class UsersController extends Controller
         } else
         if (Personne::where('Email', $request->input("Email"))->count() != 0)
             return back()->with('fail', 'Il existe déjà un fournisseur avec cet mail');
+        $this->AddHistorique(
+            "Ajout d'un fournisseur",
+            "Le fournisseur " . $request->input('Nom') . "à été ajouté.",
+
+        );
         return redirect()->route('User.Fournisseur.AddPage')->with('Success', $message);
     }
 
@@ -852,6 +1033,11 @@ class UsersController extends Controller
         }
         if (count($message) > 0) {
             $personne->save();
+            $this->AddHistorique(
+                "Mise à jour  d'un fournisseur",
+                "Les informations du fournisseur " . $$oldNom . " ont été modifié.",
+
+            );
             return back()->with('Success', $message);
         } else
             return back();
@@ -862,6 +1048,11 @@ class UsersController extends Controller
         $personne = Personne::find($id);
         $personne->Etat = 1;
         $personne->update();
+        $this->AddHistorique(
+            "Suppression d'un fournisseur",
+            "Le fournisseur " . $personne->Nom . " à été supprimé.",
+
+        );
         return back()->with('Success', [2000 => 'Suppression du fournisseur ' . $personne->Nom . ' réussie.']);
     }
 
@@ -870,7 +1061,9 @@ class UsersController extends Controller
         $user = Utilisateur::find(session()->get('logged'));
         $fournisseurs = Personne::join('fournisseurs', 'fournisseurs.id', '=', 'personnes.id')
             ->where('personnes.Etat', 0)
-            ->where('fournisseurs.BoutiqueId', $user->BoutiqueId)->get();
+            ->where('fournisseurs.BoutiqueId', $user->BoutiqueId)
+            ->orderByDesc('DateAjout')
+            ->get();
         return view("client.pages.Fournisseurs.lister", compact('user', "fournisseurs"));
     }
 
@@ -903,21 +1096,342 @@ class UsersController extends Controller
 
     public function CommandeAdd(Request $request)
     {
-        dd($request);
+        $this->validate($request, [
+            "FormArticle" => ['required'],
+            "FormEntrepot" => ['required'],
+            "FormFournisseur" => ['required'],
+            "FormQuantite" => ['required'],
+            "FormModele" => ['required'],
+        ]);
+        $message = [];
+        $articles = $request->input('FormArticle');
+        $entrepots = $request->input('FormEntrepot');
+        $fournisseurs = $request->input('FormFournisseur');
+        $quantites = $request->input('FormQuantite');
+        $modeles = $request->input('FormModele');
+        $distinctFournisseur = [];
+        $nbrFournisseurs = 0;
+        for ($i = 0; $i < count($fournisseurs); $i++) {
+            if (!in_array($fournisseurs[$i], $distinctFournisseur)) {
+                $distinctFournisseur[$nbrFournisseurs] = $fournisseurs[$i];
+                $nbrFournisseurs += 1;
+            }
+        }
+        $tempData = [];
+        for ($i = 0; $i < count($distinctFournisseur); $i++) {
+            $tempData[$distinctFournisseur[$i]] = [];
+            $element = 0;
+            for ($u = 0; $u < count($fournisseurs); $u++) {
+                if ($fournisseurs[$u] == $distinctFournisseur[$i]) {
+                    $tempData[$distinctFournisseur[$i]][$element] = [
+                        "fournisseur" => $fournisseurs[$u],
+                        "article" => $articles[$u],
+                        "entrepot" => $entrepots[$u],
+                        "quantite" => $quantites[$u],
+                        "modele" => $modeles[$u],
+                    ];
+                    $element += 1;
+                }
+            }
+        }
+        //dd($tempData);
+        $count = 2000;
+        foreach ($tempData as $key => $value) {
+            $commandesFournisseur = $tempData[$key];
+            $nbr = 0;
+            $idFournisseur = 0;
+            for ($u = 0; $u < count($commandesFournisseur); $u++) {
+                $nbr += 1;
+                $commande  = $commandesFournisseur[$u];
+                $idFournisseur = $commande["fournisseur"];
+                $mod = 0;
+                if ($commande["modele"])
+                    $mod = $commande["modele"];
+                $commandeAdd =  Commande::create([
+                    "DateCommande" => now(),
+                    "Etat" => 0,
+                    "FournisseurId" => $commande["fournisseur"],
+                    "ModeleId" => $mod,
+                    "EntrepotId" => $commande["entrepot"]
+                ]);
+                DB::insert('insert into commande_article(
+                    Quantite,
+                    ArticleId,
+                    CommandeId,
+                    Etat
+                ) values (?,?,?,?)', [
+                    $commande["quantite"],
+                    $commande["article"],
+                    $commandeAdd->id,
+                    0
+                ]);
+            }
+            if ($nbr == 1)
+                $message[$count] = "Une commande à été demandée au fournisseur " . Personne::find($idFournisseur)->Nom;
+            else
+                $message[$count] = $nbr . " commandes à été demandée au fournisseur " . Personne::find($idFournisseur)->Nom;
+            $count += 2000;
+        }
+        return back()->with('Success', $message);
+    }
+
+    public static function SendMail($message, $to)
+    {
+    }
+
+    public function Commandes()
+    {
+        $user = Utilisateur::find(session()->get('logged'));
+        $commandes = Commande::join('personnes', 'personnes.id', '=', 'commandes.FournisseurId')
+            ->join('commande_article', 'commande_article.CommandeId', '=', 'commandes.id')
+            ->join('entrepots', 'entrepots.id', '=', 'commandes.EntrepotId')
+            ->join('articles', 'articles.id', '=', 'commande_article.ArticleId')
+            ->where("personnes.Etat", 0)
+            ->where("entrepots.Etat", 0)
+            ->where("entrepots.BoutiqueId", $user->BoutiqueId)
+            ->where("commande_article.Etat", 0)
+            ->where("commandes.Etat", "<>", 1)
+            ->select('commandes.id as id', 'commandes.DateCommande', 'personnes.Nom as Fournisseur', 'commande_article.Quantite', 'commande_article.ArticleId as ArticleId', 'entrepots.id as EntrepotId', 'articles.Libelle as Article', 'personnes.id as FournisseurId', 'commandes.Etat as Etat')
+            ->groupBy('Fournisseur', 'commande_article.Quantite', 'EntrepotId', 'Article', 'id', 'ArticleId', 'FournisseurId')
+            ->get();
+        $articles = Article::join('article_entrepot', 'article_entrepot.ArticleId', '=', 'articles.id')
+            ->join('entrepots', 'entrepots.id', '=', 'article_entrepot.EntrepotId')
+            ->where('entrepots.Etat', 0)
+            ->where('articles.Etat', 0)
+            ->where('entrepots.BoutiqueId', $user->BoutiqueId)
+            ->select('articles.Libelle as Libelle', 'articles.id as Id')
+            ->groupBy('Libelle', 'Id')
+            ->get();
+        $fournisseurs = Fournisseur::join('personnes', 'personnes.id', '=', 'fournisseurs.id')
+            ->where('personnes.Etat', 0)
+            ->select('personnes.Nom', 'personnes.id')
+            ->where('BoutiqueId', $user->BoutiqueId)
+            ->get();
+        $entrepots = Entrepot::where('Etat', 0)
+            ->where('BoutiqueId', $user->BoutiqueId)
+            ->get();
+        $commandeModele = Commande::where('Etat', '<>', 1)
+            ->select('ModeleId', 'id')
+            ->get();
+        $temp = Modele::where('Etat', 0)
+            ->where('BoutiqueId', $user->BoutiqueId)
+            ->get();
+        $modeles = [];
+        $modData = [];
+        for ($i = 0; $i < count($temp); $i++)
+            $modeles[$temp[$i]['id']] = $temp[$i]['Description'];
+        for ($i = 0; $i < count($commandeModele); $i++)
+            $modData[$commandeModele[$i]['id']] = $commandeModele[$i]['ModeleId'];
+        return view('client.pages.Commandes.lister', compact('user', 'commandes', 'modeles', 'commandeModele', 'articles', 'entrepots', 'temp', 'modData', 'fournisseurs'));
+    }
+
+    public function CommandeRestore($id)
+    {
+        $commande = Commande::find($id);
+        $detailsCommande = DB::table('commande_article')
+            ->join('articles', 'articles.id', '=', 'commande_article.ArticleId')
+            ->where('CommandeId', $id)
+            ->select('Libelle')
+            ->first();
+        $commande->Etat = 0;
+        $commande->DateCommande = now();
+        $commande->update();
+        $this->AddHistorique("Restoration d'une commande", "La commande du produit " . $detailsCommande->Libelle . " a été restaurée.");
+        return back()->with('Success', [2000 => 'Annulation de la commande du produit ' . $detailsCommande->Libelle . ' réussie.']);
+    }
+    public function CommandeDelete($id)
+    {
+        $commande = Commande::find($id);
+        $detailsCommande = DB::table('commande_article')
+            ->join('articles', 'articles.id', '=', 'commande_article.ArticleId')
+            ->where('CommandeId', $id)
+            ->select('Libelle')
+            ->first();
+        $commande->Etat = 1;
+        $commande->update();
+        $this->AddHistorique("Suppression d'une commande", "La commande du produit " . $detailsCommande->Libelle . " a été supprimée.");
+        return back()->with('Success', [2000 => 'Annulation de la commande du produit ' . $detailsCommande->Libelle . ' réussie.']);
+    }
+    public function CommandeCancel($id)
+    {
+        $commande = Commande::find($id);
+        $detailsCommande = DB::table('commande_article')
+            ->join('articles', 'articles.id', '=', 'commande_article.ArticleId')
+            ->where('CommandeId', $id)
+            ->select('Libelle')
+            ->first();
+        $commande->Etat = 3;
+        $commande->update();
+        $this->AddHistorique("Annulation d'une commande", "La commande du produit " . $detailsCommande->Libelle . " a été annulée.");
+        return back()->with('Success', [2000 => 'Annulation de la commande du produit ' . $detailsCommande->Libelle . ' réussie.']);
+    }
+    public function CommandeUpdate(Request $request)
+    {
+        $commande = Commande::join('entrepots', 'entrepots.id', '=', 'commandes.EntrepotId')
+            ->join('personnes', 'personnes.id', '=', 'commandes.FournisseurId')
+            ->join('commande_article', 'commande_article.CommandeId', '=', 'commandes.id')
+            ->join('articles', 'articles.id', '=', 'commande_article.ArticleId')
+            ->where('commandes.id', '=', $request->input('Id'))
+            ->select('articles.id as Article', 'commandes.ModeleId as ModeleId', 'entrepots.id as Entrepot', 'commande_article.Quantite as Quantite', 'personnes.id as Fournisseur')
+            ->groupBy('Article', 'ModeleId', 'Entrepot', 'Quantite', 'Fournisseur')
+            ->first();
+        $updateCommande = Commande::find($request->input('Id'));
+        $updateCommandeArticle = DB::table('commande_article')
+            ->where('CommandeId', $updateCommande->id)
+            ->first();
+        $message = [];
+        $count = 2000;
+        if ($commande->ModeleId != $request->input("Modele")) {
+            $updateCommande->ModeleId = $request->input("Modele");
+            $message[$count] = "Modification du modèle de la commande.";
+            $count += 2000;
+        }
+        if ($commande->Article != $request->input("Article")) {
+            DB::table('commande_article')
+                ->where('CommandeId', $updateCommande->id)
+                ->update([
+                    "ArticleId" => $request->input("Article")
+                ]);
+            $message[$count] = "Modification de l'article de la commande.";
+            $count += 2000;
+        }
+        if ($commande->Quantite != $request->input("Quantite")) {
+            DB::table('commande_article')
+                ->where('CommandeId', $updateCommande->id)
+                ->update([
+                    "Quantite" => $request->input("Quantite")
+                ]);
+            $message[$count] = "Modification de la quantité de la commande.";
+            $count += 2000;
+        }
+        if ($commande->Entrepot != $request->input("Entrepot")) {
+            $updateCommande->Entrepot = $request->input("Entrepot");
+            $message[$count] = "Modification de l'entrepôt de livraison de la commande.";
+            $count += 2000;
+        }
+        if ($commande->Fournisseur != $request->input("Fournisseur")) {
+            $updateCommande->Fournisseur = $request->input("Fournisseur");
+            $message[$count] = "Modification du fournisseur de la commande.";
+        }
+        $detailsCommande = DB::table('commande_article')
+            ->join('articles', 'articles.id', '=', 'commande_article.ArticleId')
+            ->where('CommandeId', $request->input('Id'))
+            ->select('Libelle')
+            ->first();
+        // $commande = Commande::find($request->input('Id'));
+        if (count($message) > 0) {
+            $updateCommande->update();
+            $this->AddHistorique("Modification d'une commande", "La commande du produit " . $detailsCommande->Libelle . " a été modifiée.");
+            return back()->with('Success', $message);
+        }
+        return back();
+    }
+
+    #endregion
+
+    #region Client
+
+    public function Clients()
+    {
+        $user = Utilisateur::find(session()->get('logged'));
+        $clients = Personne::join('client_boutique', 'personnes.id', '=', 'client_boutique.ClientId')
+            ->where('BoutiqueId', $user->BoutiqueId)
+            ->where('client_boutique.Etat', 0)
+            ->where('personnes.Etat', 0)
+            ->select('Nom', 'Prenom', 'Email', 'Contact', 'Adresse', 'personnes.id')
+            ->groupBy('Nom', 'Prenom', 'Email', 'Contact', 'Adresse', 'personnes.id')
+            ->orderByDesc('DateAjout')
+            ->get();
+        return view('client.pages.Clients.lister', compact('user', 'clients'));
+    }
+
+    public function ClientDelete($id)
+    {
+        $user = Utilisateur::find(session()->get('logged'));
+        Personne::find($id)->update([
+            "Etat" => 1
+        ]);
+        Vente::where('ClientId', $id)->update([
+            "Etat" => 1
+        ]);
+        $client = Personne::find($id);
+        DB::table('client_boutique')
+            ->where('ClientId', $id)
+            ->where('BoutiqueId', $user->BoutiqueId)
+            ->update([
+                "Etat" => 1
+            ]);
+        $this->AddHistorique(
+            "Suppression de client",
+            "Le client " . $client->Nom . " " . $client->Prenom . " a été supprimé",
+
+        );
+        return back()->with('Success', [2000 => 'Suppression du client ' . $client->Nom . ' ' . $client->Prenom  . ' réussie.']);
+    }
+
+    public function ClientUpdate(Request $request)
+    {
+        $this->validate($request, [
+            'Nom' => ['required'],
+            'Prenom' => ['required'],
+            'Adresse' => ['required'],
+            'Contact' => ['required'],
+            'Email' => ['required'],
+        ]);
+        $count = 2000;
+        $message = array();
+        $client = Personne::find($request->input('Id'));
+        $temp = $client;
+        if ($client->Nom != $request->input('Nom')) {
+            $message[$count] = "Modification du nom du client " . $client->Nom . " en " . $request->input('Nom');
+            $client->Nom = $request->input('Nom');
+            $count += 2000;
+        }
+        if ($client->Prenom != $request->input('Prenom')) {
+            $message[$count] = "Modification du prénom du client " . $client->Prenom . " en " . $request->input('Prenom');
+            $client->Prenom = $request->input('Prenom');
+            $count += 2000;
+        }
+        if ($client->Adresse != $request->input('Adresse')) {
+            $message[$count] = "Modification de l' adresse du client " . $client->Adresse . " en " . $request->input('Adresse');
+            $client->Adresse = $request->input('Adresse');
+            $count += 2000;
+        }
+        if ($client->Contact != $request->input('Contact')) {
+            $message[$count] = "Modification du contact du client " . $client->Contact . " en " . $request->input('Contact');
+            $client->Contact = $request->input('Contact');
+            $count += 2000;
+        }
+        if ($client->Email != $request->input('Email')) {
+            $this->validate($request, [
+                "Email" => ['unique:personnes']
+            ]);
+            $message[$count] = "Modification de l' email du client " . $client->Email . " en " . $request->input('Email');
+            $client->Email = $request->input('Email');
+        }
+        if (count($message) > 0) {
+            $this->AddHistorique(
+                "Mise à jour d'un client",
+                "Les informations du client " . $temp->Nom . " ont été modifié",
+            );
+            return back()->with('Success', $message);
+        }
+        return back();
     }
 
 
     #endregion
 
     #region Historique
-    public static function AddHistorique($Libelle, $Description, $BoutiqueId)
+    public static function AddHistorique($Libelle, $Description)
     {
         BoutiqueHistorique::create([
             'Libelle' => $Libelle,
             'Description' => $Description,
             'DateOperation' => now(),
             'Etat' => 0,
-            'BoutiqueId' => $BoutiqueId,
+            'CommanditaireId' => session()->get('logged'),
+            'BoutiqueId' =>  Utilisateur::find(session()->get('logged'))->BoutiqueId,
         ]);
     }
 
@@ -932,11 +1446,276 @@ class UsersController extends Controller
     public function Historiques()
     {
         $user = Utilisateur::find(session()->get('logged'));
-        $historiques = BoutiqueHistorique::where('Etat', 0)
+
+        $historiques = DB::table('boutique_historiques')->where('Etat', 0)
             ->where('BoutiqueId', $user->BoutiqueId)
+            ->orderBy('DateOperation', 'DESC')
             ->get();
-        return view('client.pages.Historiques.lister', compact('user', 'historiques'));
+        $personnes = Personne::join('utilisateurs', 'personnes.id', '=', 'utilisateurs.id')
+            ->where('Etat', 0)
+            ->select('Nom', 'Prenom', 'personnes.id as id', 'Pseudo')
+            ->groupBy('Nom', 'Prenom', 'personnes.id', 'Pseudo')
+            ->get();
+
+        return view('client.pages.Historiques.lister', compact('user', 'historiques', 'personnes'));
     }
+
+    #endregion
+
+    #region Profil
+    public function Profil()
+    {
+
+        $user = Utilisateur::find(session()->get('logged'));
+        $boutique = Boutique::find($user->BoutiqueId);
+        $users = Personne::join('utilisateurs', 'utilisateurs.id', '=', 'personnes.id')
+            ->where('Personnes.Etat', 0)
+            ->where('Personnes.id', '<>', $user->id)
+            ->where('utilisateurs.BoutiqueId', $user->BoutiqueId)
+            ->select('personnes.*', 'utilisateurs.Pseudo')
+            ->get();
+        $Nbrclient = DB::table('client_boutique')
+            ->where('BoutiqueId', $user->BoutiqueId)
+            ->count();
+        $info = Personne::join('utilisateurs', 'utilisateurs.id', '=', 'personnes.id')
+            ->where('personnes.id', $user->id)
+            ->select('personnes.*', 'Pseudo')
+            ->first();
+        return view('client.pages.Profil.info', compact('user', 'boutique', 'users', 'Nbrclient', 'info'));
+    }
+    #endregion
+
+    #region Approvisionnement
+    public function ApprovisionnementPage()
+    {
+        $user = Utilisateur::find(session()->get('logged'));
+        $articles = Article::join('article_entrepot', 'article_entrepot.ArticleId', '=', 'articles.id')
+            ->join('entrepots', 'article_entrepot.EntrepotId', '=', 'entrepots.id')
+            ->where('articles.Etat', 0)
+            ->where('entrepots.Etat', 0)
+            ->where('article_entrepot.Etat', 0)
+            ->where('BoutiqueId', $user->BoutiqueId)
+            ->select('articles.Libelle', 'articles.id', 'articles.Prix')
+            ->groupBy('articles.Libelle', 'articles.id', 'articles.Prix')
+            ->get();
+        $entrepots = Entrepot::where('Etat', 0)->where('BoutiqueId', $user->BoutiqueId)->get();
+        $modeles = Modele::where('Etat', 0)->where('BoutiqueId', $user->BoutiqueId)->get();
+        $commandes = Commande::join('personnes', 'personnes.id', '=', 'commandes.FournisseurId')
+            ->join('commande_article', 'commande_article.CommandeId', '=', 'commandes.id')
+            ->join('entrepots', 'entrepots.id', '=', 'commandes.EntrepotId')
+            ->join('articles', 'articles.id', '=', 'commande_article.ArticleId')
+            ->where("personnes.Etat", 0)
+            ->where("entrepots.Etat", 0)
+            ->where("entrepots.BoutiqueId", $user->BoutiqueId)
+            ->where("commande_article.Etat", 0)
+            ->where("commandes.Etat", 0)
+            ->select('commandes.id as id', 'commandes.ModeleId as ModeleId', 'commandes.DateCommande', 'personnes.Nom as Fournisseur', 'commande_article.Quantite', 'commande_article.ArticleId as ArticleId', 'entrepots.id as EntrepotId', 'articles.Libelle as Article', 'personnes.id as FournisseurId', 'commandes.Etat as Etat')
+            ->groupBy('Fournisseur', 'commande_article.Quantite', 'EntrepotId', 'Article', 'id', 'ArticleId', 'FournisseurId', 'ModeleId')
+            ->get();
+        return view('client.pages.Approvisionnements.ajouter', compact('user', 'articles', 'entrepots', 'modeles', 'commandes'));
+    }
+
+    public function ApprovisionnementAdd(Request $request)
+    {
+        $this->validate($request, [
+            "Quantite" => ['required'],
+            "Modele" => ['required'],
+            "Prix" => ['required'],
+            "type" => ['required'],
+        ]);
+        $user = Utilisateur::find(session()->get('logged'));
+        if ($request->input('type') == 'Commande') {
+            $this->validate($request, [
+                "Commande" => ['required']
+            ]);
+            $commande = Commande::find($request->input('Commande'));
+            $commandeQuantite = DB::table('commande_article')->where('CommandeId', $commande->id)->first()->Quantite;
+            if ($commande->ModeleId > 0) {
+                $commandeQuantite = $commandeQuantite * Modele::find($commande->ModeleId)->Quantite;
+            }
+            $approModeleQuantite = $request->input('Quantite');
+            if ($request->input('Modele') > 0) {
+                $approModeleQuantite = $approModeleQuantite * Modele::find($request->input('Modele'))->Quantite;
+            }
+            $article = DB::table('commande_article')
+                ->where('CommandeId', $commande->id)
+                ->first();
+            $oldApproQuantite = 0;
+            $oldAppro = Approvisionnement::where('CommandeId', $commande->id)->first();
+            if ($oldAppro) {
+                $temp = 1;
+                if ($oldAppro->ModeleId > 0) {
+                    $temp = Modele::find($oldAppro->ModeleId)->Quantite;
+                }
+                $oldQuantite = DB::table('approvisionnement_article')
+                    ->where('ApproId', $oldAppro->id)
+                    ->first()->Quantite;
+                $oldApproQuantite = $oldQuantite * $temp;
+            }
+            $approModeleQuantite += $oldApproQuantite;
+            if ($approModeleQuantite >= $commandeQuantite) {
+                $commande->Etat = 2;
+                $commande->update();
+            }
+            $approvisionnement = Approvisionnement::create([
+                'DateAppro' => now(),
+                'Etat' => 0,
+                'Prix' => $request->input('Prix'),
+                'CommandeId' => $commande->id,
+                'BoutiqueId' => $user->BoutiqueId,
+                'ModeleId' => $request->input('Modele')
+            ]);
+
+            DB::insert('insert into approvisionnement_article (ApproId,ArticleId,Quantite) values(?,?,?)', [
+                $approvisionnement->id,
+                $article->id,
+                $request->input('Quantite'),
+            ]);
+            if (
+                DB::table('article_entrepot')->where('EntrepotId', $commande->EntrepotId)
+                ->where('ArticleId', $article->ArticleId)->count() > 0
+            ) {
+
+                DB::table('article_entrepot')
+                    ->where('EntrepotId', $commande->EntrepotId)
+                    ->where('ArticleId', $article->ArticleId)
+                    ->increment('Quantite', $approModeleQuantite);
+            } else {
+                DB::insert('insert into article_entrepot(ArticleId,EntrepotId,Quantite) values(?,?,?)', [
+                    $article->ArticleId,
+                    $commande->EntrepotId,
+                    $approModeleQuantite
+                ]);
+            }
+            $this->AddHistorique("Ajout d'approvisionnement", "L'approvisionnement du " . $approvisionnement->DateAppro . " a été ajoutée.");
+            return back()->with('Success', [2000 => "Ajout de l'approvisionnement réussie."]);
+        } else {
+            $this->validate($request, [
+                "Article" => ['required'],
+                "Entrepot" => ['required'],
+            ]);
+            $approModeleQuantite = $request->input('Quantite');
+            if ($request->input('Modele') > 0) {
+                $approModeleQuantite = $approModeleQuantite * Modele::find($request->input('Modele'))->Quantite;
+            }
+            $approvisionnement = Approvisionnement::create([
+                'DateAppro' => now(),
+                'Etat' => 0,
+                'BoutiqueId' => $user->BoutiqueId,
+                'Prix' => $request->input('Prix'),
+                'ModeleId' => $request->input('Modele'),
+            ]);
+            DB::insert('insert into approvisionnement_article (ApproId,ArticleId,Quantite) values(?,?,?)', [
+                $approvisionnement->id,
+                $request->input('Article'),
+                $approModeleQuantite,
+            ]);
+            if (
+
+                DB::table('article_entrepot')
+                ->where('ArticleId', $request->input('Article'))
+                ->where('EntrepotId', $request->input('Entrepot'))->count() > 0
+            ) {
+
+                DB::table('article_entrepot')
+                    ->where('ArticleId', $request->input('Article'))
+                    ->where('EntrepotId', $request->input('Entrepot'))
+                    ->increment('Quantite', $approModeleQuantite);
+            } else {
+                DB::insert('insert into article_entrepot(ArticleId,EntrepotId,Quantite) values(?,?,?)', [
+                    $request->input('Article'),
+                    $request->input('Entrepot'),
+                    $approModeleQuantite
+                ]);
+            }
+            $this->AddHistorique("Ajout d'un ravitaillement", "Lee ravitaillement du " . $approvisionnement->DateAppro . " a été ajoutée.");
+            return back()->with('Success', [2000 => "Ajout du ravitaillement " . $approvisionnement->DateAppro  . " réussie."]);
+        }
+    }
+
+    public function Approvisionnements()
+    {
+        $user = Utilisateur::find(session()->get('logged'));
+        $approvisionnements = Approvisionnement::join('approvisionnement_article', 'approvisionnement_article.ApproId', '=', 'approvisionnements.id')
+            ->where("BoutiqueId", $user->BoutiqueId)
+            ->where("approvisionnements.Etat", 0)
+            ->select('DateAppro', 'CommandeId', 'Prix', 'Quantite', 'ModeleId', 'ArticleId', 'approvisionnements.id')
+            ->get();
+        $articles = Article::join('categories', 'categories.id', '=', 'articles.CategorieId')
+            ->join('article_entrepot', 'articles.id', '=', 'article_entrepot.ArticleId')
+            ->join('entrepots', 'entrepots.id', '=', 'article_entrepot.EntrepotId')
+            ->select('articles.*', 'categories.Libelle as Categorie')
+            ->where('articles.Etat', 0)
+            ->where('entrepots.BoutiqueId', $user->BoutiqueId)
+            ->groupBy('articles.Libelle', 'articles.Description', 'articles.DateAjout', 'articles.Seuil', 'articles.Prix', 'articles.id', 'articles.Etat', 'Categorie')
+            ->orderByDesc('articles.DateAjout')
+            ->get();
+        $commandes = Commande::join('personnes', 'personnes.id', '=', 'commandes.FournisseurId')
+            ->join('commande_article', 'commande_article.CommandeId', '=', 'commandes.id')
+            ->join('entrepots', 'entrepots.id', '=', 'commandes.EntrepotId')
+            ->join('articles', 'articles.id', '=', 'commande_article.ArticleId')
+            ->where("personnes.Etat", 0)
+            ->where("entrepots.Etat", 0)
+            ->where("entrepots.BoutiqueId", $user->BoutiqueId)
+            ->where("commande_article.Etat", 0)
+            ->where("commandes.Etat", "<>", 1)
+            ->select('commandes.id as id', 'commandes.DateCommande', 'personnes.Nom as Fournisseur', 'commande_article.Quantite', 'commande_article.ArticleId as ArticleId', 'entrepots.id as EntrepotId', 'articles.Libelle as Article', 'personnes.id as FournisseurId', 'commandes.Etat as Etat')
+            ->groupBy('Fournisseur', 'commande_article.Quantite', 'EntrepotId', 'Article', 'id', 'ArticleId', 'FournisseurId')
+            ->get();
+        $modeles = Modele::where("BoutiqueId", $user->BoutiqueId)->where("Etat", 0)->get();
+        $entrepots = Entrepot::where('BoutiqueId', $user->BoutiqueId)->where('Etat', 0)->get();
+        return view('client.pages.Approvisionnements.lister', compact('user', 'entrepots', 'commandes', 'articles', 'approvisionnements', 'modeles'));
+    }
+
+    public function ApprovisionnementDelete($id)
+    {
+
+        $appro = Approvisionnement::find($id);
+        $appro->Etat = 1;
+        $appro->update();
+        if ($appro->CommandeId > 0)
+            $this->AddHistorique("Suppression d'approvisionnement", "L'approvisionnement du " . $appro->DateAppro . " a été supprimée.");
+        else {
+
+            $this->AddHistorique("Suppression de ravitaillement", "Le ravitaillement du " . $appro->DateAppro . " a été supprimée.");
+        }
+        if ($appro->CommandeId > 0) {
+            return back()->with('Success', [2000 => "Suppression de l'approvisionnement du " . $appro->DateAppro . " réussie."]);
+        } else {
+            return back()->with('Success', [2000 => "Suppression du ravitaillement du " . $appro->DateAppro . " réussie."]);
+        }
+    }
+    #endregion
+
+    #region Statistiques
+    public function Statistiques()
+    {
+        $user = Utilisateur::find(session()->get('logged'));
+        $month = Vente::where('Etat', 0)
+            ->select(DB::raw('Month(DateVente) as Date'))
+            ->get();
+        $dataMonth = [];
+        for ($i = 0; $i < count($month); $i++)
+            $dataMonth[$i] = $month[$i]['Date'];
+        //dd($dataMonth);
+        $Ventes = Vente::where('Etat', 0)
+            ->select('ventes.id', DB::raw('count(ventes.id) as nbr', DB::raw('Month(DateVente) as mon')))
+            ->whereIn(DB::raw('Month(DateVente)'), $dataMonth)
+            ->groupBy('ventes.id')
+            ->get();
+        dd($Ventes);
+        return view('client.pages.Statistique.lister', compact('user'));
+    }
+    #endregion
+
+    #region Ajout d'utilisateur
+    public function UserAddPage()
+    {
+        $user = Utilisateur::find(session()->get('logged'));
+        return view('client.Other.addUser', compact('user'));
+    }
+
+
 
     #endregion
 }

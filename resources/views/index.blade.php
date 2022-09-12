@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
 <!--[if gt IE 8]><!-->
-<html class="no-js" lang="fr">
+<html class="no-js" lang="en">
 <!--<![endif]-->
 
 <head>
@@ -82,8 +82,8 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="login"><a href="{{route('SignInPage')}}">S'enrégistrer</a></li>
-                    <li class="login"><a href="{{route('LoginPage')}}">Connexion</a></li>
+                    <li class="login"><a href="{{ route('SignInPage') }}">S'enrégistrer</a></li>
+                    <li class="login"><a href="{{ route('LoginPage') }}">Connexion</a></li>
                 </ul>
 
             </div><!-- /.navbar-collapse -->
@@ -99,10 +99,11 @@
                         <div class="col-md-10 col-md-offset-1">
                             <div class="home-content">
 
-                                <h1>Bring your Big Data to Life With Soft-Tech</h1>
-                                <p>Blue Lance transforms your company's data into rich visuals for you to collect and
-                                    organize so you can focus on what matters to you. Stay in the know, spot trends as
-                                    they happen, and push your business further.</p>
+                                <h1>Augmenter votre efficacité avec notre solution </h1>
+                                <p>IE - Boutique transforme les données de votre entreprise en visuels riches que vous
+                                    pouvez collecter et organiser afin que vous puissiez vous concentrer sur ce qui
+                                    compte pour vous. Restez au courant, repérez les tendances au fur et à mesure
+                                    qu'elles se produisent et poussez votre entreprise plus loin.</p>
                             </div>
                         </div>
                     </div>
@@ -126,16 +127,11 @@
                     <div class="col-sm-6 margin-top-60">
                         <div class="single_features_right ">
                             <h2>Notre produit</h2>
-                            <p>Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum. Duis mollis, est non
-                                commodo luctus, nisi erat porttitor ligula.</p>
-                            <ul>
-                                <li>Quisque volutpat mattis eros.</li>
-                                <li>Nullam malesuada erat ut turpis.</li>
-                                <li>Suspendisse urna nibh.</li>
-                            </ul>
-                            <div class="features_buttom">
-                                <a href="" class="btn btn-default">Read More</a>
-                            </div>
+                            <p>Maîtrisez vos stocks : gestion en temps réel, mouvements automatiques en fonction des
+                                commandes / factures / livraisons clients et fournisseurs, alertes en cas d’approche de
+                                rupture de stock avec commandes fournisseurs semi-automatisées et bien d’autres
+                                fonctionnalités indispensables.Optimisez vos achats grâce au logiciel de gestion de
+                                stock Dolisi</p>
                         </div>
                     </div>
 
@@ -144,104 +140,8 @@
         </div>
     </section>
     <!--End of Features 2 Section -->
-    <section id="features" class="features sections">
-        <div class="container">
-            <div class="row">
-                <div class="main_features_content2">
-
-
-
-                    <div class="col-sm-6 margin-top-60">
-                        <div class="single_features_right ">
-                            <h2>PRODUCT DESCRIPTIONS</h2>
-                            <p>Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum. Duis mollis, est non
-                                commodo luctus, nisi erat porttitor ligula.</p>
-                            <ul>
-                                <li>Quisque volutpat mattis eros.</li>
-                                <li>Nullam malesuada erat ut turpis.</li>
-                                <li>Suspendisse urna nibh.</li>
-                            </ul>
-                            <div class="features_buttom">
-                                <a href="" class="btn btn-default">Read More</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="single_features_left text-center">
-                            <img src="/home/assets/images/feature-1.jpg" alt="" />
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </section>
     <!--End of Features 2 Section -->
-
-
-    <section id="service" class="service2 sections lightbg">
-        <div class="container">
-            <div class="row">
-                <div class="main_service2">
-                    <div class="head_title text-center">
-                        <h2>SERVICES WE PROVIDE</h2>
-                        <p>condimentum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula.</p>
-                    </div>
-
-                    <div class="service_content">
-                        <div class="col-md-6 col-sm-6">
-                            <div class="single_service2">
-                                <div class="single_service_left">
-                                    <img src="/home/assets/images/flaticon1.png" alt="" />
-                                </div>
-                                <div class="single_service_right">
-                                    <h2>Branding</h2>
-                                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-6">
-                            <div class="single_service2">
-                                <div class="single_service_left">
-                                    <img src="/home/assets/images/flaticon2.png" alt="" />
-                                </div>
-                                <div class="single_service_right">
-                                    <h2>Branding</h2>
-                                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-6">
-                            <div class="single_service2">
-                                <div class="single_service_left">
-                                    <img src="/home/assets/images/flaticon3.png" alt="" />
-                                </div>
-                                <div class="single_service_right">
-                                    <h2>Branding</h2>
-                                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-6">
-                            <div class="single_service2">
-                                <div class="single_service_left">
-                                    <img src="/home/assets/images/flaticon4.png" alt="" />
-                                </div>
-                                <div class="single_service_right">
-                                    <h2>Branding</h2>
-                                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section><!-- End of Service2 Section -->
+    <!-- End of Service2 Section -->
 
 
 
@@ -250,13 +150,12 @@
 
 
         <div class="head_title text-center">
-            <h1>Affordable Services Package</h1>
-            <p>Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum. Duis mollis, est non commodo luctus,
-                nisi erat porttitor ligula.</p>
+            <h1>Nos différents formules</h1>
+            <p>Vous pouvez choisir une formule qui vous correspond le mieux.</p>
         </div>
         <!-- Example row of columns -->
         <div class="cd-pricing-container cd-has-margins">
-            <div class="cd-pricing-switcher">
+            <!--  <div class="cd-pricing-switcher">
                 <p class="fieldset">
                     <input type="radio" name="duration-2" value="monthly" id="monthly-2" checked>
                     <label for="monthly-2">Business</label>
@@ -264,175 +163,42 @@
                     <label for="yearly-2">Community</label>
                     <span class="cd-switch"></span>
                 </p>
-            </div> <!-- .cd-pricing-switcher -->
+            </div>  .cd-pricing-switcher -->
 
             <ul class="cd-pricing-list cd-bounce-invert">
-                <li>
-                    <ul class="cd-pricing-wrapper">
-                        <li data-type="monthly" class="is-visible">
-                            <header class="cd-pricing-header">
-                                <h2>Basic</h2>
+                @foreach ($formules as $item)
+                    <div class="col-lg-6">
+                        <li style="max-height: 400px;">
+                            <ul class="cd-pricing-wrapper">
+                                <li data-type="monthly" class="is-visible">
+                                    <header class="cd-pricing-header">
+                                        <h2> {{ $item->Libelle }}</h2>
+                                        <div class="cd-price">
+                                            {{ $item->Description }}
+                                        </div>
+                                    </header> <!-- .cd-pricing-header -->
 
-                                <div class="cd-price">
-                                    <span class="cd-currency">$</span>
-                                    <span class="cd-value">30</span>
-                                    <span class="cd-duration">mo</span>
-                                </div>
-                            </header> <!-- .cd-pricing-header -->
+                                    <div class="cd-pricing-body">
+                                        <ul class="cd-pricing-features">
+                                            @foreach ($data as $itemData => $value)
+                                                @if ($itemData == $item->id)
+                                                    @foreach ($value as $val)
+                                                        <li>{{ $val->Description }}</li>
+                                                    @endforeach
+                                                @endif
+                                            @endforeach
+                                        </ul>
+                                    </div> <!-- .cd-pricing-body -->
 
-                            <div class="cd-pricing-body">
-                                <ul class="cd-pricing-features">
-                                    <li><em><i class="fa fa-check-circle"></i></em>20 Keyword</li>
-                                    <li><em><i class="fa fa-remove"></i></em>No Time Tracking</li>
-                                    <li><em><i class="fa fa-remove"></i></em>230 - Man Hour</li>
-                                    <li><em><i class="fa fa-check-circle"></i></em>News Letter Available</li>
-
-                                </ul>
-                            </div> <!-- .cd-pricing-body -->
-
-                            <footer class="cd-pricing-footer">
-                                <a class="cd-select" href="#">Purchase</a>
-                            </footer> <!-- .cd-pricing-footer -->
+                                    <footer class="cd-pricing-footer">
+                                        <a class="cd-select"
+                                            href="{{ route('SignInPageWith', ['id' => $item->id]) }}">S'abonner</a>
+                                    </footer> <!-- .cd-pricing-footer -->
+                                </li>
+                            </ul> <!-- .cd-pricing-wrapper -->
                         </li>
-
-                        <li data-type="yearly" class="is-hidden">
-                            <header class="cd-pricing-header">
-                                <h2>Basic</h2>
-
-                                <div class="cd-price">
-                                    <span class="cd-currency">$</span>
-                                    <span class="cd-value">320</span>
-                                    <span class="cd-duration">yr</span>
-                                </div>
-                            </header> <!-- .cd-pricing-header -->
-
-                            <div class="cd-pricing-body">
-                                <ul class="cd-pricing-features">
-                                    <li><em><i class="fa fa-check-circle"></i></em>20 Keyword</li>
-                                    <li><em><i class="fa fa-remove"></i></em>No Time Tracking</li>
-                                    <li><em><i class="fa fa-remove"></i></em>230 - Man Hour</li>
-                                    <li><em><i class="fa fa-check-circle"></i></em>News Letter Available</li>
-
-                                </ul>
-                            </div> <!-- .cd-pricing-body -->
-
-                            <footer class="cd-pricing-footer">
-                                <a class="cd-select" href="#">Purchase</a>
-                            </footer> <!-- .cd-pricing-footer -->
-                        </li>
-                    </ul> <!-- .cd-pricing-wrapper -->
-                </li>
-
-                <li class="cd-popular">
-                    <ul class="cd-pricing-wrapper">
-                        <li data-type="monthly" class="is-visible">
-                            <header class="cd-pricing-header">
-                                <h2>Popular</h2>
-                                <div class="cd-price">
-                                    <span class="cd-currency">$</span>
-                                    <span class="cd-value">60</span>
-                                    <span class="cd-duration">mo</span>
-                                </div>
-                            </header> <!-- .cd-pricing-header -->
-
-                            <div class="cd-pricing-body">
-                                <ul class="cd-pricing-features">
-                                    <li><em><i class="fa fa-check-circle"></i></em>20 Keyword</li>
-                                    <li><em><i class="fa fa-remove"></i></em>No Time Tracking</li>
-                                    <li><em><i class="fa fa-remove"></i></em>230 - Man Hour</li>
-                                    <li><em><i class="fa fa-check-circle"></i></em>News Letter Available</li>
-
-                                </ul>
-                            </div> <!-- .cd-pricing-body -->
-
-                            <footer class="cd-pricing-footer">
-                                <a class="cd-select" href="#">Purchase</a>
-                            </footer> <!-- .cd-pricing-footer -->
-                        </li>
-
-                        <li data-type="yearly" class="is-hidden">
-                            <header class="cd-pricing-header">
-                                <h2>Popular</h2>
-
-                                <div class="cd-price">
-                                    <span class="cd-currency">$</span>
-                                    <span class="cd-value">630</span>
-                                    <span class="cd-duration">yr</span>
-                                </div>
-                            </header> <!-- .cd-pricing-header -->
-
-                            <div class="cd-pricing-body">
-                                <ul class="cd-pricing-features">
-                                    <li><em><i class="fa fa-check-circle"></i></em>20 Keyword</li>
-                                    <li><em><i class="fa fa-remove"></i></em>No Time Tracking</li>
-                                    <li><em><i class="fa fa-remove"></i></em>230 - Man Hour</li>
-                                    <li><em><i class="fa fa-check-circle"></i></em>News Letter Available</li>
-
-                                </ul>
-                            </div> <!-- .cd-pricing-body -->
-
-                            <footer class="cd-pricing-footer">
-                                <a class="cd-select" href="#">Purchase</a>
-                            </footer> <!-- .cd-pricing-footer -->
-                        </li>
-                    </ul> <!-- .cd-pricing-wrapper -->
-                </li>
-
-                <li>
-                    <ul class="cd-pricing-wrapper">
-                        <li data-type="monthly" class="is-visible">
-                            <header class="cd-pricing-header">
-                                <h2>Premier</h2>
-
-                                <div class="cd-price">
-                                    <span class="cd-currency">$</span>
-                                    <span class="cd-value">90</span>
-                                    <span class="cd-duration">mo</span>
-                                </div>
-                            </header> <!-- .cd-pricing-header -->
-
-                            <div class="cd-pricing-body">
-                                <ul class="cd-pricing-features">
-                                    <li><em><i class="fa fa-check-circle"></i></em>20 Keyword</li>
-                                    <li><em><i class="fa fa-remove"></i></em>No Time Tracking</li>
-                                    <li><em><i class="fa fa-remove"></i></em>230 - Man Hour</li>
-                                    <li><em><i class="fa fa-check-circle"></i></em>News Letter Available</li>
-
-                                </ul>
-                            </div> <!-- .cd-pricing-body -->
-
-                            <footer class="cd-pricing-footer">
-                                <a class="cd-select" href="#">Purchase</a>
-                            </footer> <!-- .cd-pricing-footer -->
-                        </li>
-
-                        <li data-type="yearly" class="is-hidden">
-                            <header class="cd-pricing-header">
-                                <h2>Premier</h2>
-
-                                <div class="cd-price">
-                                    <span class="cd-currency">$</span>
-                                    <span class="cd-value">950</span>
-                                    <span class="cd-duration">yr</span>
-                                </div>
-                            </header> <!-- .cd-pricing-header -->
-
-                            <div class="cd-pricing-body">
-                                <ul class="cd-pricing-features">
-                                    <li><em><i class="fa fa-check-circle"></i></em>20 Keyword</li>
-                                    <li><em><i class="fa fa-remove"></i></em>No Time Tracking</li>
-                                    <li><em><i class="fa fa-remove"></i></em>230 - Man Hour</li>
-                                    <li><em><i class="fa fa-check-circle"></i></em>News Letter Available</li>
-
-                                </ul>
-                            </div> <!-- .cd-pricing-body -->
-
-                            <footer class="cd-pricing-footer">
-                                <a class="cd-select" href="#">Purchase</a>
-                            </footer> <!-- .cd-pricing-footer -->
-                        </li>
-                    </ul> <!-- .cd-pricing-wrapper -->
-                </li>
+                    </div>
+                @endforeach
             </ul> <!-- .cd-pricing-list -->
         </div> <!-- .cd-pricing-container -->
 
@@ -442,9 +208,9 @@
     <section id="business" class="portfolio sections">
         <div class="container">
             <div class="head_title text-center">
-                <h1>Our Business Analytics Platform</h1>
-                <p>Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum. Duis mollis, est non commodo
-                    luctus, nisi erat porttitor ligula.</p>
+                <h1>Les différentes fonctionnalités</h1>
+                <p>IE-Boutique vous offre bien assez de fonctionnalités dans la gestion de votre stock. Une partie vous
+                    sera brièvement détaillée ici.</p>
             </div>
 
             <div class="row">
@@ -453,9 +219,9 @@
                         <div class="community-edition">
                             <i class="fa fa-book"></i>
                             <div class="separator"></div>
-                            <h4>Community Edition</h4>
-                            <p>Visually explore your data through a free-form drag-and-drop canvas, a broad range of
-                                modern data visualizations, and an easy-to-use report authoring experience.</p>
+                            <h4>Les alertes</h4>
+                            <p>Lorsqu'un produit est en dessous de seuil que vous lui avez fixé une ou des alertes vont
+                                sont affichés pour vousb informer de l'état du produit.</p>
                         </div>
                     </div>
 
@@ -463,9 +229,9 @@
                         <div class="community-edition">
                             <i class="fa fa-bug"></i>
                             <div class="separator"></div>
-                            <h4>Community Edition</h4>
-                            <p>Visually explore your data through a free-form drag-and-drop canvas, a broad range of
-                                modern data visualizations, and an easy-to-use report authoring experience.</p>
+                            <h4>Les notifications</h4>
+                            <p>Chaque action que vous poser sur la plateforme vous informe de l'état de l'action par une
+                                notification, des couleurs ont été définies suivant l'état de l'action.</p>
                         </div>
                     </div>
 
@@ -473,9 +239,10 @@
                         <div class="community-edition">
                             <i class="fa fa-gears"></i>
                             <div class="separator"></div>
-                            <h4>Community Edition</h4>
-                            <p>Visually explore your data through a free-form drag-and-drop canvas, a broad range of
-                                modern data visualizations, and an easy-to-use report authoring experience.</p>
+                            <h4>L'impression</h4>
+                            <p>IE-Boutique vous offre la possiblité d'imprimer vos informations sur différents éléments
+                                et les différentes
+                                ventes que vous avez effectuer</p>
                         </div>
                     </div>
 
@@ -483,9 +250,9 @@
                         <div class="community-edition">
                             <i class="fa fa-external-link"></i>
                             <div class="separator"></div>
-                            <h4>Community Edition</h4>
-                            <p>Visually explore your data through a free-form drag-and-drop canvas, a broad range of
-                                modern data visualizations, and an easy-to-use report authoring experience.</p>
+                            <h4>L'historique des activités</h4>
+                            <p>Chaque opération que vous entreprenez sur la plateforme est enrégistrer pour de vous
+                                retrouver.</p>
                         </div>
                     </div>
 
@@ -499,9 +266,8 @@
                         <div class="community-edition">
                             <i class="fa fa-coffee"></i>
                             <div class="separator"></div>
-                            <h4>Community Edition</h4>
-                            <p>Visually explore your data through a free-form drag-and-drop canvas, a broad range of
-                                modern data visualizations, and an easy-to-use report authoring experience.</p>
+                            <h4>La gestion des autorisations</h4>
+                            <p>Certaines actions sont régies par le statut de l'utilisateur connecté. </p>
                         </div>
                     </div>
 
@@ -509,31 +275,13 @@
                         <div class="community-edition">
                             <i class="fa fa-tree"></i>
                             <div class="separator"></div>
-                            <h4>Community Edition</h4>
-                            <p>Visually explore your data through a free-form drag-and-drop canvas, a broad range of
-                                modern data visualizations, and an easy-to-use report authoring experience.</p>
+                            <h4>Les statistiques</h4>
+                            <p>Des statistiques sur toute sorte de niveau sont générées avec toute sortes d'effet pour
+                                vous permettre de suivre l'évolution de la boutique.</p>
                         </div>
                     </div>
 
-                    <div class="col-md-3 col-sm-6 col-xs-12">
-                        <div class="community-edition">
-                            <i class="fa fa-paper-plane-o"></i>
-                            <div class="separator"></div>
-                            <h4>Community Edition</h4>
-                            <p>Visually explore your data through a free-form drag-and-drop canvas, a broad range of
-                                modern data visualizations, and an easy-to-use report authoring experience.</p>
-                        </div>
-                    </div>
 
-                    <div class="col-md-3 col-sm-6 col-xs-12">
-                        <div class="community-edition">
-                            <i class="fa fa-folder-open"></i>
-                            <div class="separator"></div>
-                            <h4>Community Edition</h4>
-                            <p>Visually explore your data through a free-form drag-and-drop canvas, a broad range of
-                                modern data visualizations, and an easy-to-use report authoring experience.</p>
-                        </div>
-                    </div>
 
                 </div>
             </div>
@@ -546,9 +294,9 @@
             <div class="row">
                 <div class="main_contact whitebackground">
                     <div class="head_title text-center">
-                        <h2>GET IN TOUCH</h2>
-                        <p>Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum. Duis mollis, est non
-                            commodo luctus, nisi erat porttitor ligula.</p>
+                        <h2>Nous contacter</h2>
+                        <p>Vous pouvez nous envoyer un message par mail pour nous faire part d'une information, nous
+                            vous répondrons dans les brefs délais.</p>
                     </div>
                     <div class="contact_content">
                         <div class="col-md-6">
@@ -556,8 +304,8 @@
                                 <form action="#" id="formid">
 
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="name"
-                                            placeholder="first name" required="">
+                                        <input type="text" class="form-control" name="name" placeholder="Nom"
+                                            required="">
                                     </div>
 
                                     <div class="form-group">
@@ -571,16 +319,17 @@
                                     </div>
 
                                     <div class="center-content">
-                                        <input type="submit" value="Submit" class="btn btn-default">
+                                        <input type="submit" value="Envoyer" class="btn btn-default">
                                     </div>
                                 </form>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="single_right_contact">
-                                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque
-                                    volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh,
-                                    viverra non, semper suscipit, posuere a, pede.</p>
+                                <p>Ce texte ne veut absolument rien dire, veuillez ne pas vous en occuper. Ne perdez pas
+                                    votre temps à lire tout ce texte car encore une fois elle ne veut absolument rien
+                                    dire Veuillez continuer votre route. Merci d'avoir
+                                    scrollé jusqu'à la fin. </p>
 
                                 <div class="contact_address margin-top-40">
                                     <span>1600 Pennsylvania Ave NW, Washington,</span>
@@ -704,9 +453,7 @@
     <script src="/home/assets/js/plugins.js"></script>
     <script src="/home/assets/js/modernizr.js"></script>
     <script src="/home/assets/js/main.js"></script>
-    <script>
-       
-    </script>
+    <script></script>
 </body>
 
 </html>

@@ -35,7 +35,7 @@
                     <div class="data-table-list">
                         <div class="basic-tb-hd">
                             <h2>Liste des catégories disponibles.</h2>
-                            <p>La liste des catégories s'afficheront en dessous, vous pouvez recherchez une catégorie en
+                            <p>La liste des catégories s'affichera en dessous, vous pouvez recherchez une catégorie en
                                 particulier ou également trier la liste des catégories obtenues.</p>
                         </div>
                         <div class="table-responsive">
@@ -60,12 +60,6 @@
                                         </tr>
                                     @endforelse
                                 </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th class="text-center">Libelle</th>
-                                        <th class="text-center">Description</th>
-                                    </tr>
-                                </tfoot>
                             </table>
                         </div>
                     </div>

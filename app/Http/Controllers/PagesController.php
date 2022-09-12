@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Avantage;
 use App\Models\Personne;
+use App\Models\Tarif;
 use App\Models\Utilisateur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -11,7 +13,24 @@ class PagesController extends Controller
 {
     public function Index()
     {
-        return view('index');
+        $formules = Tarif::where('Etat', '0')->get();
+        $data = array();
+        foreach ($formules as $key => $value) {
+            $data[$value->id] = Avantage::join('tarif_avantage', 'tarif_avantage.avantage_id', '=', 'avantages.id')
+                ->join('tarifs', 'tarif_avantage.tarif_id', '=', 'tarifs.id')
+                ->where('tarifs.Etat', 0)
+                ->where('avantages.Etat', 0)
+                ->where('tarif_avantage.Etat', 0)
+                ->select('avantages.Description')
+                ->where('tarifs.id', $value->id)
+                ->get();
+        }
+        return view('index', compact('formules', 'data'));
+    }
+
+    public function SignIn(Request $request)
+    {
+        return view('auth.login');
     }
 
     public function LoginPage()
@@ -19,9 +38,16 @@ class PagesController extends Controller
         return view('auth.login');
     }
 
+    public function SignInPageWith($id)
+    {
+        // dd($id);
+        $formules = Tarif::where('Etat', '0')->get();
+        return view('auth.signInWith', compact('formules', 'id'));
+    }
     public function SignInPage()
     {
-        return view('auth.signIn');
+        $formules = Tarif::where('Etat', '0')->get();
+        return view('auth.signIn', compact('formules'));
     }
 
     public function Login(Request $request)

@@ -53,30 +53,7 @@
                                 </div>
                             </div>
                         </div>
-                        {{-- <div class="form-example-int form-horizental mg-t-15">
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-lg-6 col-md-3 col-sm-3 col-xs-12">
-                                        <label class="hrzn-fm text-center">Liste des entrepots de l'article</label>
-                                    </div>
-                                    <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">
-                                        <div class="chosen-select-act fm-cmp-mg">
-                                            <select class="chosen" id="EntrepotSelect" onchange="ArticleSelect()" required
-                                                data-placeholder="Séléctionnez l'entrepot">
-                                                @forelse ($entrepots as $item)
-                                                    <option disabled id="EntrepotSelection {{ $item->id }}">
-                                                        {{ $item->Description }}</option>
-                                                @empty
-                                                    <option disabled value="">Aucun entrepot de disponible</option>
-                                                @endforelse
-                                            </select>
-                                        </div>
-                                        <small class="text-center">Selectionnez l'entrepot de déstockage de
-                                            l'article</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> --}}
+                      
                         <div class="form-example-int form-horizental mg-t-15">
                             <div class="form-group">
                                 <div class="row">
@@ -615,7 +592,7 @@
                 });
                 Articleselect.options[Articleselect.selectedIndex].setAttribute("disabled", "true");
             } else {
-
+                Articleselect.options[Articleselect.selectedIndex].removeAttribute("disabled");
 
             }
             $("#ArticleSelect").trigger("chosen:updated");
@@ -784,6 +761,11 @@
         }
 
         function SupprimerLigne(test) {
+            AjoutQTE(
+                parseInt(document.getElementById("TableElement " + test).getElementsByTagName('td')[0]
+                    .innerHTML), parseInt(document.getElementById("TableElement " + test).getElementsByTagName('td')[3]
+                    .innerHTML)
+            );
             var tbody = document.getElementById("TableTbody");
             tbody.removeChild(document.getElementById("TableElement " + test));
             $.growl('Suppression de ' + test, {
@@ -820,7 +802,7 @@
             for (var index = 1; index < Articleselect.options.length; index++)
                 Articleselect.options[index].disabled = false;
             $("#ArticleSelect").trigger("chosen:updated");
-
+            RestoreQTE();
             document.getElementById("BtnEffectuer").disabled = false;
             document.getElementById("VentePrix").innerHTML = "Prix total ?";
             document.getElementById("BtnEffectuer").innerHTML = "Effectuer";
@@ -843,6 +825,14 @@
                 Articleselect.options[Articleselect.selectedIndex].value,
                 document.getElementById("VenteQuantite").value
             );
+            if(QTERestant[Articleselect.options[Articleselect.selectedIndex].value] == 0 ){
+                Articleselect.options[Articleselect.selectedIndex].setAttribute("disabled","true");
+                 $.growl("L'article " +Articleselect.options[Articleselect.selectedIndex].text +" n'est plus disponible en local.", {
+                type: 'info',
+                delay: 5000,
+            });
+            }
+
         }
         var VentesNavHeader = document.getElementById("VentesNavHeader");
         var NavVentes = document.getElementById("NavVentes");
@@ -850,5 +840,6 @@
         var oldClassNav = NavVentes.getAttribute("class");
         VentesNavHeader.setAttribute("class", oldClassHeader + " active");
         NavVentes.setAttribute("class", oldClassNav + " active");
+
     </script>
 @endsection

@@ -20,11 +20,13 @@ class AdministrateursController extends Controller
     public function Index()
     {
         $admin = Utilisateur::find(Session::get('logged'));
+        $utilisateurs = Utilisateur::where('Role', '<>', 'Admin')->count();
+        $boutiques = Boutique::count();
         $this->CreateHistorique("Connexion", "Connexion de l'administrateur " . $admin->Pseudo . ".");
-        return view('admin.pages.dashboard', compact('admin'));
+        return view('admin.pages.dashboard', compact('admin', 'utilisateurs', 'boutiques'));
     }
 
-    public function CreateHistorique($libelle, $description)
+    public static function CreateHistorique($libelle, $description)
     {
         Historique::create([
             'Libelle' => $libelle,

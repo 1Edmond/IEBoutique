@@ -3,6 +3,17 @@
     <link rel="stylesheet" href="/client/css/jquery.dataTables.min.css">
 @endsection
 
+@section('InfoLabel')
+    Page de la liste de vos abonnements
+@endsection
+
+
+
+@section('InfoDescription')
+    <p>
+        La liste des abonnements de la boutique s'affichera ici.
+    </p>
+@endsection
 @section('content')
     <div class="data-table-area">
         <div class="container">
@@ -11,7 +22,8 @@
                     <div class="data-table-list">
                         <div class="basic-tb-hd">
                             <h2>Liste des abonnements de votre boutique</h2>
-                            <p>La liste des abonnements s'afficheront en dessous, vous recherchez un abonnement en particulier ou également trier la liste des abonnements obtenue.</p>
+                            <p>La liste des abonnements s'afficheront en dessous, vous recherchez un abonnement en
+                                particulier ou également trier la liste des abonnements obtenue.</p>
                         </div>
                         <div class="table-responsive">
                             <table id="data-table-basic" class="table table-striped table-hover">
@@ -25,9 +37,9 @@
                                 <tbody>
                                     @forelse ($abonnements as $item)
                                         <tr>
-                                            <td class="text-center">{{$item->DateAbonnement}}</td>
-                                            <td class="text-center">{{$item->Tarif}}</td>
-                                            <td class="text-center">{{$item->Nom}} {{$item->Prenom}}</td>
+                                            <td class="text-center">{{ $item->DateAbonnement }}</td>
+                                            <td class="text-center">{{ $item->Tarif }}</td>
+                                            <td class="text-center">{{ $item->Nom }} {{ $item->Prenom }}</td>
                                         </tr>
                                     @empty
                                         <tr>
@@ -55,7 +67,15 @@
 
 @section('script')
     <!-- Data Table JS
-      ============================================ -->
+                  ============================================ -->
     <script src="/client/js/data-table/jquery.dataTables.min.js"></script>
     <script src="/client/js/data-table/data-table-act.js"></script>
+    <script>
+        var AbonnementNavHeader = document.getElementById("AbonnementNavHeader");
+        var NavAbonnement = document.getElementById("NavAbonnement");
+        var oldClassHeader = AbonnementNavHeader.getAttribute("class");
+        var oldClassNav = NavAbonnement.getAttribute("class");
+        AbonnementNavHeader.setAttribute("class", oldClassHeader + " active");
+        NavAbonnement.setAttribute("class", oldClassNav + " active");
+    </script>
 @endsection
